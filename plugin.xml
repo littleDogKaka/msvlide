@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	<!-- Builder and Nature start -->
+	<extension
+		id="MSVLBuilder"
+		name="MSVL Project Builder"
+		point="org.eclipse.core.resources.builders">
+		<builder hasNature="true">
+			<run class="cn.edu.xidian.ictt.msvlide.project.builder.MSVLBuilder">
+			</run>
+		</builder>
+	</extension>
+   
+	<extension
+		id="MSVLNature"
+		name="MSVL Project Nature"
+		point="org.eclipse.core.resources.natures">
+		<runtime>
+			<run
+				class="cn.edu.xidian.ictt.msvlide.project.builder.MSVLNature">
+			</run>
+		</runtime>
+		<builder
+			id="cn.edu.xidian.ictt.msvlide.MSVLBuilder">
+		</builder>
+	</extension>
+	<extension
+		point="org.eclipse.ui.ide.projectNatureImages">
+		<image
+			id="cn.edu.xidian.ictt.msvlide.project.nature.image"
+			icon="icons/sample.gif"
+			natureId="cn.edu.xidian.ictt.msvlide.MSVLNature">
+		</image>
+	</extension>
+   <!-- Builder and Nature end -->
+
+   <extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+
+   
+	<!-- new project start-->
+	<extension
+		point="org.eclipse.ui.newWizards">
+		<category
+			name="MSVL"
+			id="cn.edu.xidian.ictt.msvlide.newwizards.category">
+		</category>
+		<wizard
+            name="MSVL Project"
+            icon="icons/sample.gif"
+            category="cn.edu.xidian.ictt.msvlide.newwizards.category"
+            class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateProject"
+            preferredPerspectives=""
+            project="true"
+            finalPerspective=""
+            id="cn.edu.xidian.ictt.msvlide.newwizards.project">
+			<description>
+				Create a new MSVL project
+			</description>
+		</wizard>
+		<wizard
+			name="MSVL Main Source File"
+            icon="icons/sample.gif"
+            category="cn.edu.xidian.ictt.msvlide.newwizards.category"
+            class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateMainFile"
+            id="cn.edu.xidian.ictt.msvlide.newwizards.CreateMainFile">
+		</wizard>
+		<wizard
+			name="MSVL Func File"
+            icon="icons/sample.gif"
+            category="cn.edu.xidian.ictt.msvlide.newwizards.category"
+            class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateFuncFile"
+            id="cn.edu.xidian.ictt.msvlide.newwizards.CreateFuncFile">
+		</wizard>
+	</extension>
+	<!-- new project end-->
+	
+	<!-- Project Property Pages start -->
+	<extension
+		point="org.eclipse.ui.propertyPages">
+		<page
+			id="cn.edu.xidian.ictt.msvlide.project.propertypage"
+			name="Build and Run"
+			class="cn.edu.xidian.ictt.msvlide.ui.property.BuildOptions">
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject">
+					<test 
+						property="org.eclipse.core.resources.projectNature" 
+						value="cn.edu.xidian.ictt.msvlide.MSVLNature"/>
+				</adapt>
+			</enabledWhen>
+		</page>
+	</extension>
+	<!-- Project Property Pages end -->
+	
+	<!-- console start -->
+	<extension
+		point="org.eclipse.ui.console.consoleFactories">
+		<consoleFactory 
+			label="MSVL Builder Console"
+			class="cn.edu.xidian.ictt.msvlide.console.MessageConsoleFactory"
+			icon="icons/sample.gif">
+		</consoleFactory>
+	</extension>
+	<!-- console end -->
+	
+	<!-- action sets start -->
+	<extension
+		point="org.eclipse.ui.actionSets">
+		<actionSet
+			label="MSVL ActionSet"
+			visible="true"
+			id="MSVLActionSet">
+			<menu
+				label="MSVL"
+				path="additions"
+				id="cn.edu.xidian.ictt.msvlide.actionsets.menu">
+				<separator
+					name="content">
+				</separator>
+				<separator
+					name="additions">
+				</separator>
+			</menu>
+			<action
+				id="cn.edu.xidian.ictt.msvlide.actionsets.build.action"
+				label="Build"
+				icon="icons/sample.gif"
+				tooltip="Build MSVL Project"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.menu/content"
+				toolbarPath="Normal/additions"
+				class="cn.edu.xidian.ictt.msvlide.action.BuildAction">
+			</action>
+			<action
+				id="cn.edu.xidian.ictt.msvlide.actionsets.clean.action"
+				label="Clean"
+				icon="icons/sample.gif"
+				tooltip="Clean MSVL Project"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.menu/content"
+				toolbarPath="Normal/additions"
+				class="cn.edu.xidian.ictt.msvlide.action.CleanAction">
+			</action>
+		</actionSet>
+	</extension>
+	<!-- action sets end -->
+	
+	<!-- launch start -->
+	<extension
+		point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType
+			id= "cn.edu.xidian.ictt.msvlide.launch.ConfigurationType"
+			delegate= "cn.edu.xidian.ictt.msvlide.launch.LaunchDelegate"
+			modes= "run, debug"
+			name= "MSVL Application"
+			delegateName="MSVL Application Launch Tooling"
+			delegateDescription="This MSVL tooling will run or debug MSVL code.">>
+		</launchConfigurationType>
+	</extension>
+	
+	<extension
+		point="org.eclipse.debug.ui.launchShortcuts">
+		<shortcut
+			class= "cn.edu.xidian.ictt.msvlide.launch.Shortcut"
+			icon= "icons/sample.gif"
+			id= "cn.edu.xidian.ictt.msvlide.launch.launchshortcut"
+			label= "MSVL Application"
+			modes= "run,debug" >
+			<contextualLaunch>
+				<enablement>
+					<with
+						variable= "selection">
+						<count
+							value= "1">
+						</count>
+						<iterate>
+							<adapt
+								type="org.eclipse.core.resources.IProject">
+								<test
+									value="cn.edu.xidian.ictt.msvlide.MSVLNature"
+									property="org.eclipse.core.resources.projectNature">
+								</test>
+							</adapt>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+		</shortcut>
+	</extension>
+
+	<extension
+		point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+		<launchConfigurationTabGroup
+			class= "cn.edu.xidian.ictt.msvlide.ui.launch.ConfigTabGroup"
+			id= "cn.edu.xidian.ictt.msvlide.ui.launch.ConfigurationTabGroup"
+			type= "cn.edu.xidian.ictt.msvlide.launch.ConfigurationType" >
+            <launchMode
+				mode="run"
+				description="Create a configuration that will launch a MSVL application.">
+            </launchMode>
+            <launchMode 
+				mode="debug"
+				perspective=""
+				description="Create a configuration that will debug a MSVL application.">
+            </launchMode>
+		</launchConfigurationTabGroup>
+	</extension>
+	
+	<extension
+		point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+		<launchConfigurationTypeImage
+			configTypeID= "cn.edu.xidian.ictt.msvlide.launch.ConfigurationType"
+			icon= "icons/sample.gif"
+			id= "cn.edu.xidian.ictt.msvlide.ui.launch.ConfigurationTypeImage" >
+		</launchConfigurationTypeImage>
+	</extension>
+	<!-- launch end -->
+	
+</plugin>
+
+
+
+
