@@ -40,20 +40,10 @@ public class MProject {
         	return project;
         }
 		
-		try{
-			IWorkbench workbench =  Activator.getDefault().getWorkbench();
-			IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-			IWorkbenchPage page = window.getActivePage();
-			IEditorPart	part = page.getActiveEditor();
-
-	        if(part != null){  
-	            Object object = part.getEditorInput().getAdapter(IFile.class);  
-	            if(object != null){  
-	                project = ((IFile)object).getProject();  
-	            }  
-	        }
-		}catch(NullPointerException e){
-			//e.printStackTrace();
+		
+		IFile currentFile = getActiveEditorInput();
+		if(currentFile != null){
+			project = currentFile.getProject();
 		}
 		
 		if(project != null){
@@ -77,5 +67,25 @@ public class MProject {
 		}
 		
 		return project;
+	}
+	
+	public static IFile getActiveEditorInput(){
+		IFile file = null;
+		try{
+			IWorkbench workbench =  Activator.getDefault().getWorkbench();
+			IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+			IWorkbenchPage page = window.getActivePage();
+			IEditorPart	part = page.getActiveEditor();
+
+	        if(part != null){  
+	            Object object = part.getEditorInput().getAdapter(IFile.class);  
+	            if(object != null){  
+	                file = (IFile)object;  
+	            }  
+	        }
+		}catch(NullPointerException e){
+			//e.printStackTrace();
+		}
+		return file;
 	}
 }

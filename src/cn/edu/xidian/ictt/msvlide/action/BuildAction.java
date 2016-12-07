@@ -18,6 +18,7 @@ import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 public class BuildAction implements IWorkbenchWindowActionDelegate{
 
 	private IWorkbenchWindow window;
+	private IProject project = null;
 	
 	@Override
 	public void init(IWorkbenchWindow window) {
@@ -26,7 +27,7 @@ public class BuildAction implements IWorkbenchWindowActionDelegate{
 	
 	@Override
 	public void run(IAction action) {
-		if(window == null){
+		if(window == null || project == null){
 			return;
 		}
 		IProject project = MProject.get();

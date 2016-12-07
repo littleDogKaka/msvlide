@@ -152,6 +152,50 @@
 				class="cn.edu.xidian.ictt.msvlide.action.CleanAction">
 			</action>
 		</actionSet>
+		
+		<actionSet
+			label="Convert ActionSet"
+			visible="true"
+			id="cn.edu.xidian.ictt.msvlide.ActionSet.Convert">
+			<menu
+				label="Convert"
+				path="additions"
+				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu">
+				<separator
+					name="content">
+				</separator>
+				<separator
+					name="additions">
+				</separator>
+			</menu>
+			<action
+				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.c2msvl"
+				label="C2MSVL"
+				icon="icons/sample.gif"
+				tooltip="Convert C to MSVL"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
+				toolbarPath="Normal/additions"
+				class="cn.edu.xidian.ictt.msvlide.action.C2MSVLAction">
+			</action>
+			<action
+				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.verlog2msvl"
+				label="Verlog2MSVL"
+				icon="icons/sample.gif"
+				tooltip="Convert Verlog to MSVL"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
+				toolbarPath="Normal/additions"
+				class="cn.edu.xidian.ictt.msvlide.action.Verlog2MSVLAction">
+			</action>
+			<action
+				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.hdl2msvl"
+				label="HDL2MSVL"
+				icon="icons/sample.gif"
+				tooltip="Convert HDL to MSVL"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
+				toolbarPath="Normal/additions"
+				class="cn.edu.xidian.ictt.msvlide.action.HDL2MSVLAction">
+			</action>
+		</actionSet>
 	</extension>
 	<!-- action sets end -->
 	

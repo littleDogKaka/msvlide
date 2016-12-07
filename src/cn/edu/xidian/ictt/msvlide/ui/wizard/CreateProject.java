@@ -49,8 +49,14 @@ public class CreateProject extends BasicNewProjectResourceWizard{
 			
 			IFolder srcFolder = project.getFolder("src");
 			IFolder outputFolder = project.getFolder("bin");
+			IFolder csrcFolder = project.getFolder("src-c");
+			IFolder verlogsrcFolder = project.getFolder("src-verlog");
+			IFolder hdlsrcFolder = project.getFolder("src-HDL");
 			srcFolder.create(true, true, null);
 			outputFolder.create(true, true, null);
+			csrcFolder.create(true, true, null);
+			verlogsrcFolder.create(true, true, null);
+			hdlsrcFolder.create(true, true, null);
 			
 			IFile main = srcFolder.getFile("main.m");
 			main.create(new ByteArrayInputStream("frame() and (\n\t\n)".getBytes()), true, null);
