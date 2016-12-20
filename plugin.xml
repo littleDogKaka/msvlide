@@ -172,7 +172,7 @@
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.c2msvl"
 				label="C2MSVL"
 				icon="icons/sample.gif"
-				tooltip="Convert C to MSVL"
+				tooltip="C to MSVL"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
 				class="cn.edu.xidian.ictt.msvlide.action.C2MSVLAction">
@@ -181,25 +181,39 @@
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.verilog2msvl"
 				label="Verilog2MSVL"
 				icon="icons/sample.gif"
-				tooltip="Convert Verilog to MSVL"
+				tooltip="Verilog to MSVL"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
 				class="cn.edu.xidian.ictt.msvlide.action.Verilog2MSVLAction">
 			</action>
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.hdl2msvl"
-				label="HDL2MSVL"
+				label="VHDL2MSVL"
 				icon="icons/sample.gif"
-				tooltip="Convert HDL to MSVL"
+				tooltip="VHDL to MSVL"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
-				class="cn.edu.xidian.ictt.msvlide.action.HDL2MSVLAction">
+				class="cn.edu.xidian.ictt.msvlide.action.VHDL2MSVLAction">
 			</action>
 		</actionSet>
 	</extension>
 	<!-- action sets end -->
 	
 	<!-- launch start -->
+	<!--<extension
+		point="org.eclipse.debug.core.launchDelegates">
+		<launchDelegate
+			id="cn.edu.xidian.ictt.msvlide.launch.LaunchDelegate"
+			delegate="cn.edu.xidian.ictt.msvlide.launch.LaunchDelegate"
+			type="cn.edu.xidian.ictt.msvlide.launch.LaunchDelegate"
+			name="MSVL Tooling">
+			<modeCombination 
+				modes="run, profile"
+				perspective="cn.edu.xidian.ictt.msvlide.perspective.one">
+			</modeCombination>
+			<modeCombination modes="debug, profile, coverage"></modeCombination>
+		</launchDelegate>
+	</extension>-->
 	<extension
 		point="org.eclipse.debug.core.launchConfigurationTypes">
 		<launchConfigurationType
@@ -286,11 +300,12 @@
 	<extension
 		point="org.eclipse.core.runtime.adapters">
 		<factory 
-			class="cn.edu.xidian.ictt.msvlide.launch.MAdapterFactory" 
+			class="cn.edu.xidian.ictt.msvlide.launch.MAdapterFactory"
 			adaptableType="org.eclipse.core.resources.IResource">
 			<adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
 		</factory>
 	</extension>
+
 	
 </plugin>
 

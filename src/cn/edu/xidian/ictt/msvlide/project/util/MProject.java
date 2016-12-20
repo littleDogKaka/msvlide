@@ -25,10 +25,12 @@ public class MProject {
 
 		if(selection == null){
 			ISelectionService selectionService = Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-			selection = selectionService.getSelection();
+			if(selectionService != null){
+				selection = selectionService.getSelection();
+			}
 		}
 		
-		if (selection instanceof IStructuredSelection) {
+		if (selection != null && selection instanceof IStructuredSelection) {
 			Object obj = ((IStructuredSelection) selection).getFirstElement();
 			if (obj instanceof IResource)
 				project = ((IResource) obj).getProject();

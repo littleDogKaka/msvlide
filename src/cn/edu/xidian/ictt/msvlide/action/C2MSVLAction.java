@@ -33,10 +33,10 @@ public class C2MSVLAction implements IWorkbenchWindowActionDelegate{
 	
 	@Override
 	public void run(IAction action) {
-		if(window == null || project == null){
+		if(window == null){
 			return;
 		}
-		if(resource == null){
+		if(resource == null || project == null){
 			showDialog();
 			return;
 		}

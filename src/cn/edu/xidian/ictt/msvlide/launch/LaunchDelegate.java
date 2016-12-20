@@ -47,7 +47,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 			return;
 		}
 		
-		StringBuilder cmdBuilder = new StringBuilder();
+		StringBuilder cmdBuilder = new StringBuilder();//"cmd /C start /b "
 		cmdBuilder.append(exeFile.getRawLocation().toString());
 		cmdBuilder.append(DELIMITER);
 		
@@ -64,20 +64,19 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 		
 		String cmd = cmdBuilder.toString();
 		//System.out.println(cmd);
-		
+
 		Process p = DebugPlugin.exec(cmd.split(DELIMITER), wdir);
-		
-		IProcess process = null;
-		
+
 		// add process type to process attributes
 		Map<String, String> processAttributes = new HashMap<String, String>();
 		processAttributes.put(IProcess.ATTR_PROCESS_TYPE, projectName);
 		
 		launch.setAttribute(IProcess.ATTR_CMDLINE , cmd);
 		
-		process= DebugPlugin.newProcess(launch, p, project.getName(),processAttributes);
+		IProcess process= DebugPlugin.newProcess(launch, p, project.getName(),processAttributes);
 		
 		if (CommonTab.isLaunchInBackground(config)) {
+			
 			// refresh resources after process finishes
 			/*
 			 * if (RefreshTab.getRefreshScope(configuration) != null) {
