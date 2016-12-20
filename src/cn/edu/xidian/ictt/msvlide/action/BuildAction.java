@@ -27,10 +27,10 @@ public class BuildAction implements IWorkbenchWindowActionDelegate{
 	
 	@Override
 	public void run(IAction action) {
-		if(window == null || project == null){
+		if(window == null){
 			return;
 		}
-		IProject project = MProject.get();
+
 		if(project == null){
 			String[] btns = {"OK"};
 			MessageDialog dialog = new MessageDialog(window.getShell(),"MSVL Project", null,"Please choose a MSVL project!", MessageDialog.WARNING,btns,0); 
@@ -47,7 +47,7 @@ public class BuildAction implements IWorkbenchWindowActionDelegate{
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		
+		project = MProject.get(selection);
 	}
 
 	@Override

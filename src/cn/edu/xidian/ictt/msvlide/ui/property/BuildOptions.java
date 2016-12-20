@@ -156,7 +156,7 @@ public class BuildOptions extends PropertyPage{
 		
 		
 		try{
-			IProject project = MProject.get();
+			IProject project = MProject.get(null);
 			String isOutput = Property.get(project, PType.ISOUTPUT);
 			String maxstatus = Property.get(project, PType.MAXSTATUS);
 			String interval = Property.get(project, PType.INTERVAL);
@@ -198,7 +198,7 @@ public class BuildOptions extends PropertyPage{
 		maxStatusNumberText.setText("1000000");
 		statusIntervalText.setText("1");
 		commandLineArgs.setText("");
-		workingDirectory.setText(MProject.get().getLocation().toString());
+		workingDirectory.setText(MProject.get(null).getLocation().toString());
 		super.performDefaults();
 	}
 
@@ -216,7 +216,7 @@ public class BuildOptions extends PropertyPage{
 	private boolean storeProperty(){
 		boolean rtn = true;
 		try{
-			IProject project = MProject.get();
+			IProject project = MProject.get(null);
 			Property.set(project, PType.ISOUTPUT, isOutputBtn.getSelection()?"true":"false");
 			Property.set(project, PType.MAXSTATUS, maxStatusNumberText.getText().trim());
 			Property.set(project, PType.INTERVAL, statusIntervalText.getText().trim());

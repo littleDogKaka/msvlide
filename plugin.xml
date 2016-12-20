@@ -178,13 +178,13 @@
 				class="cn.edu.xidian.ictt.msvlide.action.C2MSVLAction">
 			</action>
 			<action
-				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.verlog2msvl"
-				label="Verlog2MSVL"
+				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.verilog2msvl"
+				label="Verilog2MSVL"
 				icon="icons/sample.gif"
-				tooltip="Convert Verlog to MSVL"
+				tooltip="Convert Verilog to MSVL"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
-				class="cn.edu.xidian.ictt.msvlide.action.Verlog2MSVLAction">
+				class="cn.edu.xidian.ictt.msvlide.action.Verilog2MSVLAction">
 			</action>
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.hdl2msvl"

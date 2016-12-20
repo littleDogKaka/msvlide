@@ -26,7 +26,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 	@Override
 	public void launch(ILaunchConfiguration config, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 
-		IProject project = MProject.get();
+		IProject project = MProject.get(null);
 		
 		if(project == null){
 			return;

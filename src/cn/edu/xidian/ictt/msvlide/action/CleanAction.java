@@ -21,6 +21,7 @@ import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 public class CleanAction implements IWorkbenchWindowActionDelegate{
 
 	private IWorkbenchWindow window;
+	private IProject project = null;
 	
 	@Override
 	public void init(IWorkbenchWindow window) {
@@ -32,7 +33,7 @@ public class CleanAction implements IWorkbenchWindowActionDelegate{
 		if(window == null){
 			return;
 		}
-		IProject project = MProject.get();
+		
 		if(project == null){
 			String[] btns = {"OK"};
 			MessageDialog dialog = new MessageDialog(window.getShell(),"MSVL Project", null,"Please choose a MSVL project!", MessageDialog.WARNING,btns,0); 
@@ -49,7 +50,7 @@ public class CleanAction implements IWorkbenchWindowActionDelegate{
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		
+		project = MProject.get(selection);
 	}
 
 	@Override

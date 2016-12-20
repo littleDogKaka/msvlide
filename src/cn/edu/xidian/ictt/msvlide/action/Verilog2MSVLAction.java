@@ -18,7 +18,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import cn.edu.xidian.ictt.msvlide.console.MessageConsoleFactory;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 
-public class HDL2MSVLAction implements IWorkbenchWindowActionDelegate{
+public class Verilog2MSVLAction implements IWorkbenchWindowActionDelegate{
 
 	private IWorkbenchWindow window;
 	private IFile file;
@@ -37,6 +37,7 @@ public class HDL2MSVLAction implements IWorkbenchWindowActionDelegate{
 			showDialog();
 			return;
 		}
+		
 		String filename = file.getName();
 		if(!filename.endsWith(".v")){
 			showDialog();
@@ -79,10 +80,11 @@ public class HDL2MSVLAction implements IWorkbenchWindowActionDelegate{
 
 	@Override
 	public void dispose() {}
-
+	
 	private void showDialog(){
 		String[] btns = {"OK"};
-		MessageDialog dialog = new MessageDialog(window.getShell(),"MSVL Project", null,"Please choose a HDL source file in directory \"src-HDL\"", MessageDialog.WARNING,btns,0); 
+		MessageDialog dialog = new MessageDialog(window.getShell(),"Verilog to MSVL", null,"Please select a Verilog source file in directory \"src-verilog\"", MessageDialog.WARNING,btns,0); 
 		dialog.open();
+		return;
 	}
 }

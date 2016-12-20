@@ -19,29 +19,27 @@ import cn.edu.xidian.ictt.msvlide.project.builder.MSVLNature;
 
 
 public class MProject {
-	public static IProject get(){
-		
+	
+	public static IProject get(ISelection selection){
 		IProject project = null;
-		try{
-			ISelectionService selectionService = Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-			ISelection selection = selectionService.getSelection();
-			if (selection instanceof IStructuredSelection) {
-				Object element = ((IStructuredSelection) selection).getFirstElement();
 
-				if (element instanceof IResource) {
-					project = ((IResource) element).getProject();
-				} 
-			}
-		}catch(NullPointerException e){
-			//e.printStackTrace();
+		if(selection == null){
+			ISelectionService selectionService = Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getSelectionService();
+			selection = selectionService.getSelection();
+		}
+		
+		if (selection instanceof IStructuredSelection) {
+			Object obj = ((IStructuredSelection) selection).getFirstElement();
+			if (obj instanceof IResource)
+				project = ((IResource) obj).getProject();
 		}
 		
 		if(project != null){
         	return project;
         }
 		
-		
 		IFile currentFile = getActiveEditorInput();
+		
 		if(currentFile != null){
 			project = currentFile.getProject();
 		}
@@ -71,21 +69,17 @@ public class MProject {
 	
 	public static IFile getActiveEditorInput(){
 		IFile file = null;
-		try{
-			IWorkbench workbench =  Activator.getDefault().getWorkbench();
-			IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-			IWorkbenchPage page = window.getActivePage();
-			IEditorPart	part = page.getActiveEditor();
+		IWorkbench workbench =  Activator.getDefault().getWorkbench();
+		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+		IWorkbenchPage page = window.getActivePage();
+		IEditorPart	part = page.getActiveEditor();
 
-	        if(part != null){  
-	            Object object = part.getEditorInput().getAdapter(IFile.class);  
-	            if(object != null){  
-	                file = (IFile)object;  
-	            }  
-	        }
-		}catch(NullPointerException e){
-			//e.printStackTrace();
-		}
+	    if(part != null){  
+	        Object object = part.getEditorInput().getAdapter(IFile.class);  
+	        if(object != null){  
+	            file = (IFile)object;  
+	        }  
+	     }
 		return file;
 	}
 }

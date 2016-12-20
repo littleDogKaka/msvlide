@@ -208,7 +208,7 @@ public class ConfigTabMain extends AbstractLaunchConfigurationTab{
 	}
 	
 	private void init(){
-		IProject project = MProject.get();
+		IProject project = MProject.get(null);
 		if(project == null){
 			isOutputBtn.setSelection(false);
 			currentProjectName.setEnabled(false);
