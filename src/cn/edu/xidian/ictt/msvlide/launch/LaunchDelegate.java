@@ -13,7 +13,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
-import org.eclipse.debug.ui.CommonTab;
+//import org.eclipse.debug.ui.CommonTab;
 
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 import cn.edu.xidian.ictt.msvlide.project.util.PType;
@@ -31,6 +31,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 		if(project == null){
 			return;
 		}
+		
 		String projectName = project.getName();
 		String args = Property.get(project, PType.CMDLINEARGS);
 		String wd = Property.get(project, PType.WORKINGDIR);
@@ -43,11 +44,11 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 		
 		File wdir = new File(wd);
 		if(!wdir.exists() || !wdir.canWrite() || !wdir.canRead()){
-			System.out.println("Working directory does not exist or is unreadable or unwritable.");
+			System.out.println("Working directory does not exist or it's unreadable or unwritable.");
 			return;
 		}
 		
-		StringBuilder cmdBuilder = new StringBuilder();//"cmd /C start /b "
+		StringBuilder cmdBuilder = new StringBuilder();
 		cmdBuilder.append(exeFile.getRawLocation().toString());
 		cmdBuilder.append(DELIMITER);
 		
@@ -64,44 +65,48 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 		
 		String cmd = cmdBuilder.toString();
 		//System.out.println(cmd);
-
+		
 		Process p = DebugPlugin.exec(cmd.split(DELIMITER), wdir);
-
+		
 		// add process type to process attributes
 		Map<String, String> processAttributes = new HashMap<String, String>();
 		processAttributes.put(IProcess.ATTR_PROCESS_TYPE, projectName);
 		
 		launch.setAttribute(IProcess.ATTR_CMDLINE , cmd);
 		
-		IProcess process= DebugPlugin.newProcess(launch, p, project.getName(),processAttributes);
-		
-		if (CommonTab.isLaunchInBackground(config)) {
-			
-			// refresh resources after process finishes
-			/*
-			 * if (RefreshTab.getRefreshScope(configuration) != null) {
-			 * BackgroundResourceRefresher refresher = new
-			 * BackgroundResourceRefresher(configuration, process);
-			 * refresher.startBackgroundRefresh(); }
-			 */
-		} else {
-			// wait for process to exit
-			while (!process.isTerminated()) {
-				try {
-					if (monitor.isCanceled()) {
-						process.terminate();
-						break;
-					}
-					Thread.sleep(50);
-				} catch (InterruptedException e) {}
-			}
-			// refresh resources
-			
-		}
+		//IProcess process= 
+		DebugPlugin.newProcess(launch, p, project.getName(),processAttributes);
 		
 	}
 
 }
+
+
+//if (CommonTab.isLaunchInBackground(config)) {
+//System.out.println("background");
+//// refresh resources after process finishes
+///*
+// * if (RefreshTab.getRefreshScope(configuration) != null) {
+// * BackgroundResourceRefresher refresher = new
+// * BackgroundResourceRefresher(configuration, process);
+// * refresher.startBackgroundRefresh(); }
+// */
+//} else {
+//// wait for process to exit
+//while (!process.isTerminated()) {
+//	try {
+//		if (monitor.isCanceled()) {
+//			process.terminate();
+//			break;
+//		}
+//		Thread.sleep(50);
+//	} catch (InterruptedException e) {}
+//}
+//// refresh resources
+//}
+
+
+
 ////org.eclipse.debug.ui.ATTR_CAPTURE_STDIN_FILE=${workspace_loc:/www/bin/main.m.bc} //input
 //String inputFilePath = config.getAttribute("org.eclipse.debug.ui.ATTR_CAPTURE_STDIN_FILE", "");
 //

@@ -110,7 +110,7 @@
 		<consoleFactory 
 			label="MSVL Builder Console"
 			class="cn.edu.xidian.ictt.msvlide.console.MessageConsoleFactory"
-			icon="icons/sample.gif">
+			icon="icons/console_16.ico">
 		</consoleFactory>
 	</extension>
 	<!-- console end -->
@@ -136,7 +136,7 @@
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.build.action"
 				label="Build"
-				icon="icons/sample.gif"
+				icon="icons/build_16.ico"
 				tooltip="Build MSVL Project"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.menu/content"
 				toolbarPath="Normal/additions"
@@ -145,7 +145,7 @@
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.clean.action"
 				label="Clean"
-				icon="icons/sample.gif"
+				icon="icons/clean_16.ico"
 				tooltip="Clean MSVL Project"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.menu/content"
 				toolbarPath="Normal/additions"
@@ -170,8 +170,8 @@
 			</menu>
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.c2msvl"
-				label="C2MSVL"
-				icon="icons/sample.gif"
+				label="C to MSVL"
+				icon="icons/copy_16.ico"
 				tooltip="C to MSVL"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
@@ -179,8 +179,8 @@
 			</action>
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.verilog2msvl"
-				label="Verilog2MSVL"
-				icon="icons/sample.gif"
+				label="Verilog to MSVL"
+				icon="icons/copy_16.ico"
 				tooltip="Verilog to MSVL"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
@@ -188,8 +188,8 @@
 			</action>
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.hdl2msvl"
-				label="VHDL2MSVL"
-				icon="icons/sample.gif"
+				label="VHDL to MSVL"
+				icon="icons/copy_16.ico"
 				tooltip="VHDL to MSVL"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
@@ -230,7 +230,7 @@
 		point="org.eclipse.debug.ui.launchShortcuts">
 		<shortcut
 			class= "cn.edu.xidian.ictt.msvlide.launch.Shortcut"
-			icon= "icons/sample.gif"
+			icon= "icons/console_16.ico"
 			id= "cn.edu.xidian.ictt.msvlide.launch.launchshortcut"
 			label= "MSVL Application"
 			modes= "run,debug" >
@@ -278,7 +278,7 @@
 		point="org.eclipse.debug.ui.launchConfigurationTypeImages">
 		<launchConfigurationTypeImage
 			configTypeID= "cn.edu.xidian.ictt.msvlide.launch.ConfigurationType"
-			icon= "icons/sample.gif"
+			icon= "icons/console_16.ico"
 			id= "cn.edu.xidian.ictt.msvlide.ui.launch.ConfigurationTypeImage" >
 		</launchConfigurationTypeImage>
 	</extension>

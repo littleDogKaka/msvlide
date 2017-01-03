@@ -45,7 +45,7 @@ public class VHDL2MSVLAction implements IWorkbenchWindowActionDelegate{
 		
 		String input = file.getRawLocation().toString().replace("/", "\\");
 		File wd = file.getProject().getFolder("src").getRawLocation().toFile();
-		String[] args = {"V2M.exe", input, wd.getAbsolutePath() + "\\"};
+		String[] args = {"VHDL2MSVL.exe", input, wd.getAbsolutePath() + "\\" + file.getName() + ".m"};
 		try {
 			Process p = Runtime.getRuntime().exec(args, null, wd);
 			InputStream in = p.getInputStream();
