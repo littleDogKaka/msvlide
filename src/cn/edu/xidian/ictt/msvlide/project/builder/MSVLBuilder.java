@@ -25,11 +25,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import cn.edu.xidian.ictt.msvlide.console.MessageConsoleFactory;
+import cn.edu.xidian.ictt.msvlide.console.MConsole;
+import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 import cn.edu.xidian.ictt.msvlide.project.util.PType;
 import cn.edu.xidian.ictt.msvlide.project.util.Property;
 
 public class MSVLBuilder extends IncrementalProjectBuilder {
+	
+	public static final String DELIMITER = " ";
 
 	class MSVLDeltaVisitor implements IResourceDeltaVisitor {
 		
@@ -46,7 +49,9 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 			case IResourceDelta.ADDED:
 				if(resource instanceof IFile){
 					IFile file = (IFile)resource;
-					if(file.getParent().getName().equals("src") && (file.getName().endsWith(".m") || file.getName().endsWith(".func"))){
+					if(file.getParent().getName().equals(MSetting.FOLDER_SRC) 
+							&& (file.getName().endsWith(MSetting.FILE_MAIN_SUFFIX) 
+									|| file.getName().endsWith(MSetting.FILE_FUNC_SUFFIX))){
 						checkMSVL(resource,monitor);
 						compile(file,monitor);
 					}
@@ -56,9 +61,9 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 				if(resource instanceof IFile){
 					IFile file = (IFile)resource;
 					IContainer folder = file.getParent();
-					if(folder.getName().equals("src")){
+					if(folder.getName().equals(MSetting.FOLDER_SRC)){
 						ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-						IFile bcFile= file.getProject().getFolder("bin").getFile(file.getName()+".bc");
+						IFile bcFile= file.getProject().getFolder(MSetting.FOLDER_BIN).getFile(file.getName()+".bc");
 						if(bcFile.exists()){
 							bcFile.delete(true, null);
 						}
@@ -69,7 +74,9 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 			case IResourceDelta.CHANGED:
 				if(resource instanceof IFile){
 					IFile file = (IFile)resource;
-					if(file.getParent().getName().equals("src") && (file.getName().endsWith(".m") || file.getName().endsWith(".func"))){
+					if(file.getParent().getName().equals(MSetting.FOLDER_SRC) 
+							&& (file.getName().endsWith(MSetting.FILE_MAIN_SUFFIX) 
+									|| file.getName().endsWith(MSetting.FILE_FUNC_SUFFIX))){
 						checkMSVL(resource,monitor);
 						compile(file,monitor);
 					}
@@ -90,7 +97,9 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 		public boolean visit(IResource resource) {
 			if(resource instanceof IFile){
 				IFile file = (IFile)resource;
-				if(file.getParent().getName().equals("src") && (file.getName().endsWith(".m") || file.getName().endsWith(".func"))){
+				if(file.getParent().getName().equals(MSetting.FOLDER_SRC) 
+						&& (file.getName().endsWith(MSetting.FILE_MAIN_SUFFIX) 
+								|| file.getName().endsWith(MSetting.FILE_FUNC_SUFFIX))){
 					checkMSVL(resource,monitor);
 					compile(file,monitor);
 				}
@@ -160,7 +169,7 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 	protected void clean(IProgressMonitor monitor) throws CoreException {
 		getProject().deleteMarkers(MARKER_TYPE, true, IResource.DEPTH_INFINITE);
 		ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-		File binDir = getProject().getFolder("bin").getRawLocation().toFile();
+		File binDir = getProject().getFolder(MSetting.FOLDER_BIN).getRawLocation().toFile();
 		File[] files = binDir.listFiles();
 		monitor.beginTask("cleaning", files.length + 1);
 		for(File file:files){
@@ -178,7 +187,7 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 
 	void checkMSVL(IResource resource,IProgressMonitor monitor) {
 		monitor.setTaskName("Checking...");
-		if (resource instanceof IFile && (resource.getName().endsWith(".m") || resource.getName().endsWith(".func"))) {
+		if (resource instanceof IFile && (resource.getName().endsWith(MSetting.FILE_MAIN_SUFFIX) || resource.getName().endsWith(MSetting.FILE_FUNC_SUFFIX))) {
 			IFile file = (IFile) resource;
 			deleteMarkers(file);
 			//MErrorHandler reporter = new MErrorHandler(file);
@@ -199,9 +208,9 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 	protected void fullBuild(final IProgressMonitor monitor)throws CoreException {
 		try {
 			IProject project = getProject();
-			int count = project.getFolder("src").getRawLocation().toFile().list().length;
+			int count = project.getFolder(MSetting.FOLDER_SRC).getRawLocation().toFile().list().length;
 			monitor.beginTask("Compiling ", count * 5 + 5);
-			MessageConsoleFactory.clear();
+			MConsole.clear();
 			project.accept(new MSVLResourceVisitor(monitor));
 			genExe(monitor);
 		} catch (CoreException e) {
@@ -217,7 +226,6 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 //	}
 
 	protected void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
-		MessageConsoleFactory.clear();
 		delta.accept(new MSVLDeltaVisitor(monitor));
 		genExe(monitor);
 	}
@@ -229,7 +237,7 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 			
 			String[] cmd = new String[8];
-			cmd[0] = "MC";
+			cmd[0] = MSetting.MSVL_COMPILER;
 			try {
 				cmd[1] = "output=" + Property.get(getProject(), PType.ISOUTPUT);
 				cmd[2] = "maxstate=" + Property.get(getProject(), PType.MAXSTATUS);
@@ -247,7 +255,7 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 			monitor.worked(1);
 			// delete xxx.*.bc before compile
 			try{
-				File oldBc = getProject().getFolder("bin").getFile(cmd[7]).getRawLocation().toFile();
+				File oldBc = getProject().getFolder(MSetting.FOLDER_BIN).getFile(cmd[7]).getRawLocation().toFile();
 				if(oldBc.exists()){
 					oldBc.delete();
 				}
@@ -258,7 +266,7 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 			
 			monitor.worked(1);
 			try{
-				File dir = getProject().getFolder("bin").getRawLocation().toFile();
+				File dir = getProject().getFolder(MSetting.FOLDER_BIN).getRawLocation().toFile();
 				Process p = Runtime.getRuntime().exec(cmd,null,dir);
 				new Thread(new DisplayOutput(p.getInputStream(),file.getName())).start();
 				new Thread(new DisplayOutput(p.getErrorStream(),file.getName())).start();
@@ -285,7 +293,7 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 			IProject project = getProject();
 			String exeName = project.getName() + ".exe";
-			IFolder binFolder = project.getFolder("bin");
+			IFolder binFolder = project.getFolder(MSetting.FOLDER_BIN);
 			
 			monitor.worked(1);
 			try{
@@ -302,14 +310,14 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 			String[] files = binDir.list(new NameFilter(".bc"));
 			if(files.length > 0){
 				StringBuilder cmdBuilder = new StringBuilder();
-				cmdBuilder.append("MC;");
+				cmdBuilder.append(MSetting.MSVL_COMPILER + DELIMITER);
 				for(String filename:files){
-					cmdBuilder.append(filename + ";");
+					cmdBuilder.append(filename + DELIMITER);
 				}
-				cmdBuilder.append("-o;");
+				cmdBuilder.append("-o" + DELIMITER);
 				cmdBuilder.append(exeName);
 
-				Process p = Runtime.getRuntime().exec(cmdBuilder.toString().split(";"),null,binDir);
+				Process p = Runtime.getRuntime().exec(cmdBuilder.toString().split(DELIMITER),null,binDir);
 				new Thread(new DisplayOutput(p.getInputStream(),exeName)).start();
 				new Thread(new DisplayOutput(p.getErrorStream(),exeName)).start();
 				p.waitFor();
@@ -347,7 +355,7 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 	            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 	            String line;
 	            while ((line = reader.readLine()) != null) {
-	            	MessageConsoleFactory.printToConsole(filename + ": " + line, true);
+	            	MConsole.print(filename + ": " + line, true);
 	            }
 	        } catch (IOException e) {
 	            e.printStackTrace();

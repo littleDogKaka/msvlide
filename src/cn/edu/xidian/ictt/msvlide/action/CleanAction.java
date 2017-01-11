@@ -17,6 +17,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
+import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
 public class CleanAction implements IWorkbenchWindowActionDelegate{
 
@@ -70,7 +71,7 @@ public class CleanAction implements IWorkbenchWindowActionDelegate{
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 			try{
 				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-				File[] files = project.getFolder("bin").getRawLocation().toFile().listFiles();
+				File[] files = project.getFolder(MSetting.FOLDER_BIN).getRawLocation().toFile().listFiles();
 				monitor.beginTask("cleaning...", files.length + 1);
 				for(File file:files){
 					try{

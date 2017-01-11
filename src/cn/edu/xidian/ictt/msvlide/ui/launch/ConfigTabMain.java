@@ -1,6 +1,7 @@
 package cn.edu.xidian.ictt.msvlide.ui.launch;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
@@ -18,7 +19,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import cn.edu.xidian.ictt.msvlide.project.util.MProject;
+import cn.edu.xidian.ictt.msvlide.launch.LaunchConfig;
 import cn.edu.xidian.ictt.msvlide.project.util.PType;
 import cn.edu.xidian.ictt.msvlide.project.util.Property;
 
@@ -38,6 +39,7 @@ public class ConfigTabMain extends AbstractLaunchConfigurationTab{
 	
 	@Override
 	public void createControl(Composite parent) {
+		
 		Composite panel = new Composite(parent,SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 3;
@@ -188,11 +190,11 @@ public class ConfigTabMain extends AbstractLaunchConfigurationTab{
 		
 		createVerticalSpacer(panel, 2);
 		
-		Label NOTE = new Label(panel,SWT.NONE);
-		GridData noteGD = new GridData(GridData.FILL_HORIZONTAL);
-		noteGD.horizontalSpan = 3;
-		NOTE.setLayoutData(noteGD);
-		NOTE.setText("Note:\n    You can through \"project's Properties->Build and Run\" to modify those arguments.");
+//		Label NOTE = new Label(panel,SWT.NONE);
+//		GridData noteGD = new GridData(GridData.FILL_HORIZONTAL);
+//		noteGD.horizontalSpan = 3;
+//		NOTE.setLayoutData(noteGD);
+//		NOTE.setText("Note:\n    You can through \"project's Properties->Build and Run\" to modify those arguments.");
 		
 		setControl(panel);
 	}
@@ -204,91 +206,104 @@ public class ConfigTabMain extends AbstractLaunchConfigurationTab{
 
 	@Override
 	public void initializeFrom(ILaunchConfiguration config) {
-		init();
+		init(config);
 	}
 	
-	private void init(){
-		IProject project = MProject.get(null);
-		if(project == null){
-			isOutputBtn.setSelection(false);
+	private void init(ILaunchConfiguration config){
+		try {
+			String projectName = config.getAttribute(LaunchConfig.LAUNCH_CONFIGURATION_PROJECT_NAME_KEY, "");
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+			if(project == null){
+				isOutputBtn.setSelection(false);
+				currentProjectName.setEnabled(false);
+				isOutputBtn.setEnabled(false);
+				maxStatusNumberText.setEnabled(false);
+				statusIntervalText.setEnabled(false);
+				commandLineArgs.setEnabled(false);
+				
+				workingDirectory.setEnabled(false);
+				return;
+			}else{
+				currentProjectName.setEnabled(false);
+				
+				isOutputBtn.setEnabled(true);
+				maxStatusNumberText.setEnabled(true);
+				statusIntervalText.setEnabled(true);
+				commandLineArgs.setEnabled(true);
+				
+				workingDirectory.setEnabled(false);
+			}
+			currentProjectName.setText(project.getName());
+			try {
+				if(Property.get(project, PType.ISOUTPUT).equals("true")){
+					isOutputBtn.setSelection(true);
+					maxStatusNumberText.setEnabled(true);
+					statusIntervalText.setEnabled(true);
+					
+				}else{
+					isOutputBtn.setSelection(false);
+					maxStatusNumberText.setEnabled(false);
+					statusIntervalText.setEnabled(false);
+				}
+				maxStatusNumberText.setText(Property.get(project, PType.MAXSTATUS));
+				statusIntervalText.setText(Property.get(project, PType.INTERVAL));
+				commandLineArgs.setText(Property.get(project, PType.CMDLINEARGS));
+				workingDirectory.setText(Property.get(project, PType.WORKINGDIR));
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+			
+			/*/======================================
 			currentProjectName.setEnabled(false);
 			isOutputBtn.setEnabled(false);
 			maxStatusNumberText.setEnabled(false);
 			statusIntervalText.setEnabled(false);
 			commandLineArgs.setEnabled(false);
-			
 			workingDirectory.setEnabled(false);
-			return;
-		}else{
-			currentProjectName.setEnabled(false);
-			
-			isOutputBtn.setEnabled(true);
-			maxStatusNumberText.setEnabled(true);
-			statusIntervalText.setEnabled(true);
-			commandLineArgs.setEnabled(true);
-			
-			workingDirectory.setEnabled(false);
+			//======================================*/
+		} catch (CoreException e1) {
+			e1.printStackTrace();
 		}
-		currentProjectName.setText(project.getName());
-		try {
-			if(Property.get(project, PType.ISOUTPUT).equals("true")){
-				isOutputBtn.setSelection(true);
-				maxStatusNumberText.setEnabled(true);
-				statusIntervalText.setEnabled(true);
-				
-			}else{
-				isOutputBtn.setSelection(false);
-				maxStatusNumberText.setEnabled(false);
-				statusIntervalText.setEnabled(false);
-			}
-			maxStatusNumberText.setText(Property.get(project, PType.MAXSTATUS));
-			statusIntervalText.setText(Property.get(project, PType.INTERVAL));
-			commandLineArgs.setText(Property.get(project, PType.CMDLINEARGS));
-			workingDirectory.setText(Property.get(project, PType.WORKINGDIR));
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		
-		//======================================
-		currentProjectName.setEnabled(false);
-		isOutputBtn.setEnabled(false);
-		maxStatusNumberText.setEnabled(false);
-		statusIntervalText.setEnabled(false);
-		commandLineArgs.setEnabled(false);
-		workingDirectory.setEnabled(false);
-		//======================================
 	}
 	
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy config) {
-//		IProject project = MProject.get();
-//		if(project != null){
-//			storeProperty(project);
-//		}
+		try {
+			String projectName = config.getAttribute(LaunchConfig.LAUNCH_CONFIGURATION_PROJECT_NAME_KEY, "");
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+			if(project != null){
+				storeProperty(project);
+			}
+			config.doSave();
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy config) {
-//		try {
-//			IProject project = MProject.get();
-//			if(project != null){
-//				Property.init(project);
-//			}
-//			init();
-//		} catch (CoreException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			String projectName = config.getAttribute(LaunchConfig.LAUNCH_CONFIGURATION_PROJECT_NAME_KEY, "");
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+			if(project != null){
+				Property.init(project);
+			}
+			init(config);
+			config.doSave();
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 	}
 	
-//	private void storeProperty(IProject project){
-//		try{
-//			Property.set(project, PType.ISOUTPUT, isOutputBtn.getSelection()?"true":"false");
-//			Property.set(project, PType.MAXSTATUS, maxStatusNumberText.getText().trim());
-//			Property.set(project, PType.INTERVAL, statusIntervalText.getText().trim());
-//			Property.set(project, PType.CMDLINEARGS, commandLineArgs.getText());
-//			Property.set(project, PType.WORKINGDIR, workingDirectory.getText().trim());
-//		}catch(Exception e){
-//			e.printStackTrace();
-//		}
-//	}
+	private void storeProperty(IProject project){
+		try{
+			Property.set(project, PType.ISOUTPUT, isOutputBtn.getSelection()?"true":"false");
+			Property.set(project, PType.MAXSTATUS, maxStatusNumberText.getText().trim());
+			Property.set(project, PType.INTERVAL, statusIntervalText.getText().trim());
+			Property.set(project, PType.CMDLINEARGS, commandLineArgs.getText());
+			Property.set(project, PType.WORKINGDIR, workingDirectory.getText().trim());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 }

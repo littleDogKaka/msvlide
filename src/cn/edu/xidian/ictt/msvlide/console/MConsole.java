@@ -7,7 +7,7 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
-public class MessageConsoleFactory implements IConsoleFactory{
+public class MConsole implements IConsoleFactory{
 
 	private static MessageConsole msgConsole = new MessageConsole("MSVL Builder",null);
 	private static boolean msgConsoleExists = false;
@@ -19,7 +19,7 @@ public class MessageConsoleFactory implements IConsoleFactory{
 		}
 	}
 	
-	public static int printToConsole(String message, boolean activate) {
+	public static int print(String message, boolean activate) {
 		if(msgConsole != null){
 			MessageConsoleStream printer = msgConsole.newMessageStream();  
 		    printer.setActivateOnWrite(activate);

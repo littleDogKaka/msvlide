@@ -15,8 +15,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import cn.edu.xidian.ictt.msvlide.console.MessageConsoleFactory;
+import cn.edu.xidian.ictt.msvlide.console.MConsole;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
+import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
 public class VHDL2MSVLAction implements IWorkbenchWindowActionDelegate{
 
@@ -38,21 +39,21 @@ public class VHDL2MSVLAction implements IWorkbenchWindowActionDelegate{
 			return;
 		}
 		String filename = file.getName();
-		if(!filename.endsWith(".vhd")){
+		if(!filename.endsWith(MSetting.FILE_VHDL_SUFFIX)){
 			showDialog();
 			return;
 		}
 		
 		String input = file.getRawLocation().toString().replace("/", "\\");
 		File wd = file.getProject().getFolder("src").getRawLocation().toFile();
-		String[] args = {"VHDL2MSVL.exe", input, wd.getAbsolutePath() + "\\" + file.getName() + ".m"};
+		String[] args = {MSetting.CONVERT_VHDL_TO_MSVL, input, wd.getAbsolutePath() + "\\" + file.getName() + MSetting.FILE_MAIN_SUFFIX};
 		try {
 			Process p = Runtime.getRuntime().exec(args, null, wd);
 			InputStream in = p.getInputStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			String line;
 			while((line = br.readLine()) != null){
-				MessageConsoleFactory.printToConsole(line,true);
+				MConsole.print(line,true);
 			}
 			p.waitFor();
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -82,7 +83,7 @@ public class VHDL2MSVLAction implements IWorkbenchWindowActionDelegate{
 
 	private void showDialog(){
 		String[] btns = {"OK"};
-		MessageDialog dialog = new MessageDialog(window.getShell(),"MSVL Project", null,"Please choose a VHDL source file in directory \"src-VHDL\"", MessageDialog.WARNING,btns,0); 
+		MessageDialog dialog = new MessageDialog(window.getShell(),"MSVL Project", null,"Please choose a VHDL source file in directory " + MSetting.FOLDER_SRC_VHDL, MessageDialog.WARNING,btns,0); 
 		dialog.open();
 	}
 }

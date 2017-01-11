@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
@@ -15,7 +16,8 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 //import org.eclipse.debug.ui.CommonTab;
 
-import cn.edu.xidian.ictt.msvlide.project.util.MProject;
+import cn.edu.xidian.ictt.msvlide.console.MConsole;
+import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 import cn.edu.xidian.ictt.msvlide.project.util.PType;
 import cn.edu.xidian.ictt.msvlide.project.util.Property;
 
@@ -26,25 +28,36 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 	@Override
 	public void launch(ILaunchConfiguration config, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 
-		IProject project = MProject.get(null);
+		String Mode = config.getAttribute(LaunchConfig.LAUNCH_CONFIGURATION_MODE_KEY, mode);
+		String projectName = config.getAttribute(LaunchConfig.LAUNCH_CONFIGURATION_PROJECT_NAME_KEY, "");
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		
 		if(project == null){
 			return;
 		}
 		
-		String projectName = project.getName();
 		String args = Property.get(project, PType.CMDLINEARGS);
-		String wd = Property.get(project, PType.WORKINGDIR);
+		File wd = null;
 		
-		IFile exeFile = project.getFolder("bin").getFile(projectName + ".exe");
+		IFile exeFile = null;
+		if(Mode.equals(LaunchConfig.LAUNCH_CONFIGURATION_MODE_UMC)){
+			exeFile = project.getFolder(MSetting.FOLDER_OUT_UMC).getFile(MSetting.UMC_RUNFILE_NAME);
+			wd = project.getFolder(MSetting.FOLDER_OUT_UMC).getRawLocation().toFile();
+		}else if(Mode.equals(LaunchConfig.LAUNCH_CONFIGURATION_MODE_PMC)){
+			exeFile = project.getFolder(MSetting.FOLDER_OUT_PMC).getFile(MSetting.PMC_RUNFILE_NAME);
+			wd =  project.getFolder(MSetting.FOLDER_OUT_PMC).getRawLocation().toFile();
+		}else {
+			exeFile = project.getFolder(MSetting.FOLDER_BIN).getFile(projectName + MSetting.FILE_RUNNABLE_SUFFIX);
+			wd =  new File(Property.get(project, PType.WORKINGDIR));
+		}
+		 
 		if(!exeFile.exists()){
-			System.out.println("The executable program does not exist.");
+			MConsole.print("ERROR: " + exeFile.getName() + ": No such file.",true);
 			return;
 		}
 		
-		File wdir = new File(wd);
-		if(!wdir.exists() || !wdir.canWrite() || !wdir.canRead()){
-			System.out.println("Working directory does not exist or it's unreadable or unwritable.");
+		if(!wd.exists() || !wd.canWrite() || !wd.canRead()){
+			MConsole.print("ERROR: " +  wd.getAbsolutePath() + ": don't exist or cannot read or write.",true);
 			return;
 		}
 		
@@ -66,18 +79,16 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 		String cmd = cmdBuilder.toString();
 		//System.out.println(cmd);
 		
-		Process p = DebugPlugin.exec(cmd.split(DELIMITER), wdir);
-		
 		// add process type to process attributes
 		Map<String, String> processAttributes = new HashMap<String, String>();
 		processAttributes.put(IProcess.ATTR_PROCESS_TYPE, projectName);
 		
 		launch.setAttribute(IProcess.ATTR_CMDLINE , cmd);
-		
-		//IProcess process= 
+		Process p = DebugPlugin.exec(cmd.split(DELIMITER), wd);
 		DebugPlugin.newProcess(launch, p, project.getName(),processAttributes);
 		
 	}
+	
 
 }
 

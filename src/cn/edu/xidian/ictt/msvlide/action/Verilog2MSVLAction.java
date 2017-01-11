@@ -15,8 +15,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import cn.edu.xidian.ictt.msvlide.console.MessageConsoleFactory;
+import cn.edu.xidian.ictt.msvlide.console.MConsole;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
+import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
 public class Verilog2MSVLAction implements IWorkbenchWindowActionDelegate{
 
@@ -39,21 +40,21 @@ public class Verilog2MSVLAction implements IWorkbenchWindowActionDelegate{
 		}
 		
 		String filename = file.getName();
-		if(!filename.endsWith(".v")){
+		if(!filename.endsWith(MSetting.FILE_VERILOG_SUFFIX)){
 			showDialog();
 			return;
 		}
 		
 		String input = file.getRawLocation().toString().replace("/", "\\");
-		File wd = file.getProject().getFolder("src").getRawLocation().toFile();
-		String[] args = {"V2M.exe", input, filename + ".m"};
+		File wd = file.getProject().getFolder(MSetting.FOLDER_SRC).getRawLocation().toFile();
+		String[] args = {MSetting.CONVERT_VERILOG_TO_MSVL, input, filename + MSetting.FILE_MAIN_SUFFIX};
 		try {
 			Process p = Runtime.getRuntime().exec(args, null, wd);
 			InputStream in = p.getInputStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			String line;
 			while((line = br.readLine()) != null){
-				MessageConsoleFactory.printToConsole(line,true);
+				MConsole.print(line,true);
 			}
 			p.waitFor();
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -83,7 +84,7 @@ public class Verilog2MSVLAction implements IWorkbenchWindowActionDelegate{
 	
 	private void showDialog(){
 		String[] btns = {"OK"};
-		MessageDialog dialog = new MessageDialog(window.getShell(),"Verilog to MSVL", null,"Please select a Verilog source file in directory \"src-verilog\"", MessageDialog.WARNING,btns,0); 
+		MessageDialog dialog = new MessageDialog(window.getShell(),"Verilog to MSVL", null,"Please select a Verilog source file in directory " + MSetting.FOLDER_SRC_VHDL, MessageDialog.WARNING,btns,0); 
 		dialog.open();
 		return;
 	}

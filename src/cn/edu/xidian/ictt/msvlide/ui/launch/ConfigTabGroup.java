@@ -26,15 +26,12 @@ public class ConfigTabGroup implements ILaunchConfigurationTabGroup{
 	}
 	
 	@Override
-	public void dispose() {
-	}
+	public void dispose() {}
 
 	@Override
 	public ILaunchConfigurationTab[] getTabs() {
 		return new ILaunchConfigurationTab[]{mainTab,commonTab};
 	}
-
-	
 
 	@Override
 	public void launched(ILaunch launch) {

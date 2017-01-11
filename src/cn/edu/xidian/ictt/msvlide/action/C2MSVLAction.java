@@ -17,8 +17,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import cn.edu.xidian.ictt.msvlide.console.MessageConsoleFactory;
+import cn.edu.xidian.ictt.msvlide.console.MConsole;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
+import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
 public class C2MSVLAction implements IWorkbenchWindowActionDelegate{
 
@@ -31,52 +32,6 @@ public class C2MSVLAction implements IWorkbenchWindowActionDelegate{
 		this.window = window;
 	}
 	
-	@Override
-	public void run(IAction action) {
-		if(window == null){
-			return;
-		}
-		if(resource == null || project == null){
-			showDialog();
-			return;
-		}
-		
-		if(resource instanceof IFolder){
-			showDialog();
-			return;
-		}else if(resource instanceof IFile){
-			IFile file = (IFile)resource;
-			String postfix = file.getFileExtension();
-			if(!postfix.equals("c")){
-				showDialog();
-				return;
-			}
-			
-			String input = file.getRawLocation().toString().replace("/", "\\");
-			//System.out.println(input);
-			String[] args = {"C2M.exe", input, file.getName() + ".m"};
-			//System.out.println(args[1]);
-			
-			File wd = project.getFolder("src").getRawLocation().toFile();
-			
-			try {
-				Process p = Runtime.getRuntime().exec(args, null, wd);
-				InputStream in = p.getInputStream();
-				BufferedReader br = new BufferedReader(new InputStreamReader(in));
-				String line;
-				while((line = br.readLine()) != null){
-					MessageConsoleFactory.printToConsole(line,true);
-				}
-				p.waitFor();
-				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}else{
-			showDialog();
-		}
-	}
-
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 
@@ -95,13 +50,59 @@ public class C2MSVLAction implements IWorkbenchWindowActionDelegate{
 			project = resource.getProject();
 		}
 	}
+	
+	@Override
+	public void run(IAction action) {
+		if(window == null){
+			return;
+		}
+		if(resource == null || project == null){
+			showDialog();
+			return;
+		}
+		
+		if(resource instanceof IFolder){
+			showDialog();
+			return;
+		}else if(resource instanceof IFile){
+			IFile file = (IFile)resource;
+			String filename = file.getName();
+			if(!filename.endsWith(MSetting.FILE_C_SUFFIX)){
+				showDialog();
+				return;
+			}
+			
+			String input = file.getRawLocation().toString().replace("/", "\\");
+			//System.out.println(input);
+			String[] args = {MSetting.CONVERT_C_TO_MSVL, input, file.getName() + MSetting.FILE_MAIN_SUFFIX};
+			//System.out.println(args[1]);
+			
+			File wd = project.getFolder(MSetting.FOLDER_SRC).getRawLocation().toFile();
+			
+			try {
+				Process p = Runtime.getRuntime().exec(args, null, wd);
+				InputStream in = p.getInputStream();
+				BufferedReader br = new BufferedReader(new InputStreamReader(in));
+				String line;
+				while((line = br.readLine()) != null){
+					MConsole.print(line,true);
+				}
+				p.waitFor();
+				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else{
+			showDialog();
+		}
+	}
 
 	@Override
 	public void dispose() {}
 	
 	private void showDialog(){
 		String[] btns = {"OK"};
-		MessageDialog dialog = new MessageDialog(window.getShell(),"MSVL Project", null,"Please choose a C source file in directory \"src-c\"", MessageDialog.WARNING,btns,0); 
+		MessageDialog dialog = new MessageDialog(window.getShell(),"MSVL Project", null,"Please choose a C source file in directory " + MSetting.FOLDER_SRC_C, MessageDialog.WARNING,btns,0); 
 		dialog.open();
 	}
 }

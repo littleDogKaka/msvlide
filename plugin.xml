@@ -5,22 +5,19 @@
 	<!-- Builder and Nature start -->
 	<extension
 		id="MSVLBuilder"
-		name="MSVL Project Builder"
+		name="%MSVL.Project.Builder"
 		point="org.eclipse.core.resources.builders">
 		<builder hasNature="true">
-			<run class="cn.edu.xidian.ictt.msvlide.project.builder.MSVLBuilder">
-			</run>
+			<run class="cn.edu.xidian.ictt.msvlide.project.builder.MSVLBuilder"></run>
 		</builder>
 	</extension>
    
 	<extension
 		id="MSVLNature"
-		name="MSVL Project Nature"
+		name="%MSVL.Project.Nature"
 		point="org.eclipse.core.resources.natures">
 		<runtime>
-			<run
-				class="cn.edu.xidian.ictt.msvlide.project.builder.MSVLNature">
-			</run>
+			<run class="cn.edu.xidian.ictt.msvlide.project.builder.MSVLNature"></run>
 		</runtime>
 		<builder
 			id="cn.edu.xidian.ictt.msvlide.MSVLBuilder">
@@ -30,58 +27,53 @@
 		point="org.eclipse.ui.ide.projectNatureImages">
 		<image
 			id="cn.edu.xidian.ictt.msvlide.project.nature.image"
-			icon="icons/sample.gif"
+			icon="icons/m_16.png"
 			natureId="cn.edu.xidian.ictt.msvlide.MSVLNature">
 		</image>
 	</extension>
    <!-- Builder and Nature end -->
 
-   <extension
-         id="xmlProblem"
-         name="XML Problem"
-         point="org.eclipse.core.resources.markers">
-      <super
-            type="org.eclipse.core.resources.problemmarker">
-      </super>
-      <persistent
-            value="true">
-      </persistent>
-   </extension>
-
-   
 	<!-- new project start-->
 	<extension
 		point="org.eclipse.ui.newWizards">
 		<category
-			name="MSVL"
+			name="%MSVL.Project.Category"
 			id="cn.edu.xidian.ictt.msvlide.newwizards.category">
 		</category>
 		<wizard
-            name="MSVL Project"
+            name="%MSVL.Project"
             icon="icons/sample.gif"
             category="cn.edu.xidian.ictt.msvlide.newwizards.category"
             class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateProject"
-            preferredPerspectives="cn.edu.xidian.ictt.msvlide.perspective.one"
+            preferredPerspectives="cn.edu.xidian.ictt.msvlide.perspective"
             project="true"
-            finalPerspective="cn.edu.xidian.ictt.msvlide.perspective.one"
+            finalPerspective="cn.edu.xidian.ictt.msvlide.perspective"
             id="cn.edu.xidian.ictt.msvlide.newwizards.project">
-			<description>
-				Create a new MSVL project
-			</description>
+			<description>%MSVL.Project.New.Description</description>
 		</wizard>
 		<wizard
-			name="MSVL Main Source File"
+			name="%MSVL.File.New.Main"
             icon="icons/sample.gif"
             category="cn.edu.xidian.ictt.msvlide.newwizards.category"
             class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateMainFile"
             id="cn.edu.xidian.ictt.msvlide.newwizards.CreateMainFile">
+            <description>%MSVL.File.New.Maim.Description</description>
 		</wizard>
 		<wizard
-			name="MSVL Func File"
+			name="%MSVL.File.New.Function"
             icon="icons/sample.gif"
             category="cn.edu.xidian.ictt.msvlide.newwizards.category"
             class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateFuncFile"
             id="cn.edu.xidian.ictt.msvlide.newwizards.CreateFuncFile">
+            <description>%MSVL.File.New.Function.Description</description>
+		</wizard>
+		<wizard
+			name="%MSVL.File.New.Header"
+            icon="icons/sample.gif"
+            category="cn.edu.xidian.ictt.msvlide.newwizards.category"
+            class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateHeaderFile"
+            id="cn.edu.xidian.ictt.msvlide.newwizards.CreateHeaderFile">
+            <description>%MSVL.File.New.Header.Description</description>
 		</wizard>
 	</extension>
 	<!-- new project end-->
@@ -91,7 +83,7 @@
 		point="org.eclipse.ui.propertyPages">
 		<page
 			id="cn.edu.xidian.ictt.msvlide.project.propertypage"
-			name="Build and Run"
+			name="%MSVL.Project.Property.Page.Name"
 			class="cn.edu.xidian.ictt.msvlide.ui.property.BuildOptions">
 			<enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject">
@@ -108,7 +100,7 @@
 	<extension
 		point="org.eclipse.ui.console.consoleFactories">
 		<consoleFactory 
-			label="MSVL Builder Console"
+			label="%MSVL.Builder.Console"
 			class="cn.edu.xidian.ictt.msvlide.console.MessageConsoleFactory"
 			icon="icons/console_16.ico">
 		</consoleFactory>
@@ -118,47 +110,13 @@
 	<!-- action sets start -->
 	<extension
 		point="org.eclipse.ui.actionSets">
+		<!-- convert -->
 		<actionSet
-			label="MSVL ActionSet"
-			visible="true"
-			id="cn.edu.xidian.ictt.msvlide.ActionSet">
-			<menu
-				label="MSVL"
-				path="additions"
-				id="cn.edu.xidian.ictt.msvlide.actionsets.menu">
-				<separator
-					name="content">
-				</separator>
-				<separator
-					name="additions">
-				</separator>
-			</menu>
-			<action
-				id="cn.edu.xidian.ictt.msvlide.actionsets.build.action"
-				label="Build"
-				icon="icons/build_16.ico"
-				tooltip="Build MSVL Project"
-				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.menu/content"
-				toolbarPath="Normal/additions"
-				class="cn.edu.xidian.ictt.msvlide.action.BuildAction">
-			</action>
-			<action
-				id="cn.edu.xidian.ictt.msvlide.actionsets.clean.action"
-				label="Clean"
-				icon="icons/clean_16.ico"
-				tooltip="Clean MSVL Project"
-				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.menu/content"
-				toolbarPath="Normal/additions"
-				class="cn.edu.xidian.ictt.msvlide.action.CleanAction">
-			</action>
-		</actionSet>
-		
-		<actionSet
-			label="Convert ActionSet"
+			label="%MSVL.ActionSet.Convert"
 			visible="true"
 			id="cn.edu.xidian.ictt.msvlide.ActionSet.Convert">
 			<menu
-				label="Convert"
+				label="%MSVL.ActionSet.Convert.Menu"
 				path="additions"
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu">
 				<separator
@@ -170,59 +128,117 @@
 			</menu>
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.c2msvl"
-				label="C to MSVL"
+				label="%MSVL.ActionSet.Convert.C"
 				icon="icons/copy_16.ico"
-				tooltip="C to MSVL"
+				tooltip="%MSVL.ActionSet.Convert.C.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
 				class="cn.edu.xidian.ictt.msvlide.action.C2MSVLAction">
 			</action>
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.verilog2msvl"
-				label="Verilog to MSVL"
+				label="%MSVL.ActionSet.Convert.Verilog"
 				icon="icons/copy_16.ico"
-				tooltip="Verilog to MSVL"
+				tooltip="%MSVL.ActionSet.Convert.Verilog.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
 				class="cn.edu.xidian.ictt.msvlide.action.Verilog2MSVLAction">
 			</action>
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.hdl2msvl"
-				label="VHDL to MSVL"
+				label="%MSVL.ActionSet.Convert.VHDL"
 				icon="icons/copy_16.ico"
-				tooltip="VHDL to MSVL"
+				tooltip="%MSVL.ActionSet.Convert.VHDL.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
 				class="cn.edu.xidian.ictt.msvlide.action.VHDL2MSVLAction">
+			</action>
+		</actionSet>
+		
+		<!-- checker -->
+		<actionSet
+			label="%MSVL.ActionSet.Build"
+			visible="true"
+			id="cn.edu.xidian.ictt.msvlide.ActionSet.Build">
+			<menu
+				label="%MSVL"
+				path="additions"
+				id="cn.edu.xidian.ictt.msvlide.actionsets.menu">
+				<separator
+					name="content">
+				</separator>
+				<separator
+					name="additions">
+				</separator>
+			</menu>
+			<action
+				id="cn.edu.xidian.ictt.msvlide.actionsets.build.action"
+				label="%MSVL.Build"
+				icon="icons/build_16.ico"
+				tooltip="%MSVL.Build.Tooltip"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.menu/content"
+				toolbarPath="Normal/additions"
+				class="cn.edu.xidian.ictt.msvlide.action.BuildAction">
+			</action>
+			<action
+				id="cn.edu.xidian.ictt.msvlide.actionsets.clean.action"
+				label="%MSVL.Clean"
+				icon="icons/clean_16.ico"
+				tooltip="%MSVL.Clean.Tooltip"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.menu/content"
+				toolbarPath="Normal/additions"
+				class="cn.edu.xidian.ictt.msvlide.action.CleanAction">
+			</action>
+		</actionSet>
+		
+		<!-- Model Checker -->
+		<actionSet
+			label="%MSVL.ActionSet.ModelChecker"
+			visible="true"
+			id="cn.edu.xidian.ictt.msvlide.ActionSet.Checker">
+			<menu
+				label="%MSVL.ActionSet.ModelChecker.Menu"
+				path="additions"
+				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.menu">
+				<separator
+					name="content">
+				</separator>
+				<separator
+					name="additions">
+				</separator>
+			</menu>
+			<action
+				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.pmc"
+				label="%MSVL.ActionSet.ModelChecker.PMC"
+				icon="icons/copy_16.ico"
+				tooltip="%MSVL.ActionSet.ModelChecker.PMC.Tooltip"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.checker.menu/content"
+				toolbarPath="Normal/additions"
+				class="cn.edu.xidian.ictt.msvlide.action.PMCheckerAction">
+			</action>
+			<action
+				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.umc"
+				label="%MSVL.ActionSet.ModelChecker.UMC"
+				icon="icons/copy_16.ico"
+				tooltip="%MSVL.ActionSet.ModelChecker.UMC.Tooltip"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.checker.menu/content"
+				toolbarPath="Normal/additions"
+				class="cn.edu.xidian.ictt.msvlide.action.UMCheckerAction">
 			</action>
 		</actionSet>
 	</extension>
 	<!-- action sets end -->
 	
 	<!-- launch start -->
-	<!--<extension
-		point="org.eclipse.debug.core.launchDelegates">
-		<launchDelegate
-			id="cn.edu.xidian.ictt.msvlide.launch.LaunchDelegate"
-			delegate="cn.edu.xidian.ictt.msvlide.launch.LaunchDelegate"
-			type="cn.edu.xidian.ictt.msvlide.launch.LaunchDelegate"
-			name="MSVL Tooling">
-			<modeCombination 
-				modes="run, profile"
-				perspective="cn.edu.xidian.ictt.msvlide.perspective.one">
-			</modeCombination>
-			<modeCombination modes="debug, profile, coverage"></modeCombination>
-		</launchDelegate>
-	</extension>-->
 	<extension
 		point="org.eclipse.debug.core.launchConfigurationTypes">
 		<launchConfigurationType
 			id= "cn.edu.xidian.ictt.msvlide.launch.ConfigurationType"
 			delegate= "cn.edu.xidian.ictt.msvlide.launch.LaunchDelegate"
-			modes= "run, debug"
-			name= "MSVL Application"
-			delegateName="MSVL Application Launch Tooling"
-			delegateDescription="This MSVL tooling will run or debug MSVL code.">>
+			modes= "run, debug, pmc, umc"
+			name= "%MSVL.LaunchConfig.Name"
+			delegateName="%MSVL.LaunchConfig.Delegate.Name"
+			delegateDescription="%MSVL.LaunchConfig.Delegate.Description">
 		</launchConfigurationType>
 	</extension>
 	
@@ -232,8 +248,8 @@
 			class= "cn.edu.xidian.ictt.msvlide.launch.Shortcut"
 			icon= "icons/console_16.ico"
 			id= "cn.edu.xidian.ictt.msvlide.launch.launchshortcut"
-			label= "MSVL Application"
-			modes= "run,debug" >
+			label= "%MSVL.LaunchShortcut.Name"
+			modes= "run, debug" >
 			<contextualLaunch>
 				<enablement>
 					<with
@@ -264,12 +280,21 @@
 			type= "cn.edu.xidian.ictt.msvlide.launch.ConfigurationType" >
             <launchMode
 				mode="run"
-				description="Create a configuration that will launch a MSVL application.">
+				perspective="cn.edu.xidian.ictt.msvlide.perspective"
+				description="%MSVL.LaunchConfigurationTabGroups.Run.Description">
             </launchMode>
             <launchMode 
 				mode="debug"
-				perspective="cn.edu.xidian.ictt.msvlide.perspective.one"
-				description="Create a configuration that will debug a MSVL application.">
+				perspective="cn.edu.xidian.ictt.msvlide.perspective"
+				description="%MSVL.LaunchConfigurationTabGroups.Debug.Description">
+            </launchMode>
+            <launchMode
+				mode="umc"
+				description="%MSVL.LaunchConfigurationTabGroups.PMC.Description">
+            </launchMode>
+            <launchMode
+				mode="pmc"
+				description="%MSVL.LaunchConfigurationTabGroups.UMC.Description">
             </launchMode>
 		</launchConfigurationTabGroup>
 	</extension>
@@ -284,16 +309,34 @@
 	</extension>
 	<!-- launch end -->
 	
+	<!-- commands and handlers start 
+	<extension
+		point="org.eclipse.ui.commands">
+		<command
+			categoryId="cn.edu.xidian.ictt.msvlide.commands.category"
+			defaultHandler="cn.edu.xidian.ictt.msvlide.commands.handlers.xxxer"
+			id="cn.edu.xidian.ictt.msvlide.commands.globalCommand"
+			name="">
+		</command>
+	</extension>
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="cn.edu.xidian.ictt.msvlide.commands.handlers.GlobalMenuHandler"
+			commandId="cn.edu.xidian.ictt.msvlide.commands.globalCommand">
+		</handler>
+	</extension>
+	 commands handlers end-->
+	
 	<extension
 		point="org.eclipse.ui.perspectives">
 		<perspective
-			id="cn.edu.xidian.ictt.msvlide.perspective.one"
+			id="cn.edu.xidian.ictt.msvlide.perspective"
 			name="MSVL"
 			icon="icons/sample.gif"
 			class="cn.edu.xidian.ictt.msvlide.perspective.Factory">
-			<description>
-				MSVL Development Kit Perspective
-			</description>
+			
+			<description>%MSVL.Perspective.Description</description>
 		</perspective>
 	</extension>
 	
@@ -305,6 +348,7 @@
 			<adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
 		</factory>
 	</extension>
+
 
 	
 </plugin>

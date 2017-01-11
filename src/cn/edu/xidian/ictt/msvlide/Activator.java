@@ -4,7 +4,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import cn.edu.xidian.ictt.msvlide.console.MessageConsoleFactory;
+import cn.edu.xidian.ictt.msvlide.console.MConsole;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -29,7 +29,7 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		MessageConsoleFactory.open();
+		MConsole.open();
 	}
 
 	/*
@@ -37,7 +37,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		MessageConsoleFactory.close();
+		MConsole.close();
 		plugin = null;
 		super.stop(context);
 	}
