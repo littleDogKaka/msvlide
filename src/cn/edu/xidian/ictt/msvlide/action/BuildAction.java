@@ -13,6 +13,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
+import cn.edu.xidian.ictt.msvlide.project.builder.MSVLBuilder;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 
 public class BuildAction implements IWorkbenchWindowActionDelegate{
@@ -64,7 +65,7 @@ public class BuildAction implements IWorkbenchWindowActionDelegate{
 		@Override
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException{
 			try {
-				project.build(6, monitor);
+				project.build(MSVLBuilder.FULL_BUILD, monitor);//MSVLBuilder.BUILDER_ID, null,
 			} catch (CoreException e) {
 				e.printStackTrace();
 			}

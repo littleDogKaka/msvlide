@@ -14,12 +14,10 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
-//import org.eclipse.debug.ui.CommonTab;
 
 import cn.edu.xidian.ictt.msvlide.console.MConsole;
 import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
-import cn.edu.xidian.ictt.msvlide.project.util.PType;
-import cn.edu.xidian.ictt.msvlide.project.util.Property;
+
 
 public class LaunchDelegate extends LaunchConfigurationDelegate{
 
@@ -27,28 +25,38 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 	
 	@Override
 	public void launch(ILaunchConfiguration config, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
-
-		String Mode = config.getAttribute(LaunchConfig.LAUNCH_CONFIGURATION_MODE_KEY, mode);
-		String projectName = config.getAttribute(LaunchConfig.LAUNCH_CONFIGURATION_PROJECT_NAME_KEY, "");
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		
+		String MODE = config.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_MODE, mode);
+		String NAME = config.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, "");
+		if(NAME.isEmpty()){
+			return;
+		}
+		
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(NAME);
 		if(project == null){
 			return;
 		}
 		
-		String args = Property.get(project, PType.CMDLINEARGS);
 		File wd = null;
+		String WDIR = config.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_WD, "");
+		if(WDIR.isEmpty()){
+			wd = project.getRawLocation().toFile();
+		}else{
+			wd = new File(WDIR);
+		}
 		
+		if(!wd.exists() || !wd.canWrite() || !wd.canRead()){
+			MConsole.print("ERROR: " +  wd.getAbsolutePath() + ": don't exist or cannot read or write.",true);
+			return;
+		}
+
 		IFile exeFile = null;
-		if(Mode.equals(LaunchConfig.LAUNCH_CONFIGURATION_MODE_UMC)){
-			exeFile = project.getFolder(MSetting.FOLDER_OUT_UMC).getFile(MSetting.UMC_RUNFILE_NAME);
-			wd = project.getFolder(MSetting.FOLDER_OUT_UMC).getRawLocation().toFile();
-		}else if(Mode.equals(LaunchConfig.LAUNCH_CONFIGURATION_MODE_PMC)){
-			exeFile = project.getFolder(MSetting.FOLDER_OUT_PMC).getFile(MSetting.PMC_RUNFILE_NAME);
-			wd =  project.getFolder(MSetting.FOLDER_OUT_PMC).getRawLocation().toFile();
+		if(MODE.equals(LaunchConfig.LAUNCH_CONFIG_MODE_UMC)){
+			exeFile = project.getFolder(MSetting.FOLDER_UMC).getFile(MSetting.UMC_RUNFILE_NAME);
+		}else if(MODE.equals(LaunchConfig.LAUNCH_CONFIG_MODE_PMC)){
+			exeFile = project.getFolder(MSetting.FOLDER_PMC).getFile(MSetting.PMC_RUNFILE_NAME);
 		}else {
-			exeFile = project.getFolder(MSetting.FOLDER_BIN).getFile(projectName + MSetting.FILE_RUNNABLE_SUFFIX);
-			wd =  new File(Property.get(project, PType.WORKINGDIR));
+			exeFile = project.getFolder(MSetting.FOLDER_BIN).getFile(NAME + MSetting.FILE_RUNNABLE_SUFFIX);
 		}
 		 
 		if(!exeFile.exists()){
@@ -56,67 +64,23 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 			return;
 		}
 		
-		if(!wd.exists() || !wd.canWrite() || !wd.canRead()){
-			MConsole.print("ERROR: " +  wd.getAbsolutePath() + ": don't exist or cannot read or write.",true);
-			return;
-		}
+		String ARGS = config.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_ARGS, "").trim();
 		
 		StringBuilder cmdBuilder = new StringBuilder();
 		cmdBuilder.append(exeFile.getRawLocation().toString());
 		cmdBuilder.append(DELIMITER);
-		
-		if(args == null){
-			args = "";
-		}
-		String[] argSet = args.split(DELIMITER);
-		for(String arg: argSet){
-			if(!arg.isEmpty()){
-				cmdBuilder.append(arg);
-				cmdBuilder.append(DELIMITER);
-			}
-		}
-		
+		cmdBuilder.append(ARGS);
 		String cmd = cmdBuilder.toString();
 		//System.out.println(cmd);
 		
 		// add process type to process attributes
 		Map<String, String> processAttributes = new HashMap<String, String>();
-		processAttributes.put(IProcess.ATTR_PROCESS_TYPE, projectName);
-		
+		processAttributes.put(IProcess.ATTR_PROCESS_TYPE, NAME);
 		launch.setAttribute(IProcess.ATTR_CMDLINE , cmd);
 		Process p = DebugPlugin.exec(cmd.split(DELIMITER), wd);
-		DebugPlugin.newProcess(launch, p, project.getName(),processAttributes);
-		
+		DebugPlugin.newProcess(launch, p, NAME, processAttributes);
 	}
-	
-
 }
-
-
-//if (CommonTab.isLaunchInBackground(config)) {
-//System.out.println("background");
-//// refresh resources after process finishes
-///*
-// * if (RefreshTab.getRefreshScope(configuration) != null) {
-// * BackgroundResourceRefresher refresher = new
-// * BackgroundResourceRefresher(configuration, process);
-// * refresher.startBackgroundRefresh(); }
-// */
-//} else {
-//// wait for process to exit
-//while (!process.isTerminated()) {
-//	try {
-//		if (monitor.isCanceled()) {
-//			process.terminate();
-//			break;
-//		}
-//		Thread.sleep(50);
-//	} catch (InterruptedException e) {}
-//}
-//// refresh resources
-//}
-
-
 
 ////org.eclipse.debug.ui.ATTR_CAPTURE_STDIN_FILE=${workspace_loc:/www/bin/main.m.bc} //input
 //String inputFilePath = config.getAttribute("org.eclipse.debug.ui.ATTR_CAPTURE_STDIN_FILE", "");

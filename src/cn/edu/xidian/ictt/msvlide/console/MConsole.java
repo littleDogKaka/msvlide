@@ -9,7 +9,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 
 public class MConsole implements IConsoleFactory{
 
-	private static MessageConsole msgConsole = new MessageConsole("MSVL Builder",null);
+	private static MessageConsole msgConsole = new MessageConsole("MSVL Tools Message",null);
 	private static boolean msgConsoleExists = false;
 	
 	@Override

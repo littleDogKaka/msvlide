@@ -39,15 +39,15 @@ public class ConfigTabGroup implements ILaunchConfigurationTabGroup{
 	}
 
 	@Override
-	public void performApply(ILaunchConfigurationWorkingCopy config) {
-		mainTab.performApply(config);
-		commonTab.performApply(config);
+	public void performApply(ILaunchConfigurationWorkingCopy wc) {
+		mainTab.performApply(wc);
+		commonTab.performApply(wc);
 	}
 
 	@Override
-	public void setDefaults(ILaunchConfigurationWorkingCopy config) {
-		mainTab.setDefaults(config);
-		commonTab.setDefaults(config);
+	public void setDefaults(ILaunchConfigurationWorkingCopy wc) {
+		mainTab.setDefaults(wc);
+		commonTab.setDefaults(wc);
 	}
 
 }

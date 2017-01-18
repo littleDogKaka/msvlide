@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
+import cn.edu.xidian.ictt.msvlide.console.MConsole;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
@@ -69,20 +70,32 @@ public class CleanAction implements IWorkbenchWindowActionDelegate{
 		
 		@Override
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+			if(!MProject.isMSVLProject(project)){
+				return;
+			}
 			try{
+				project.deleteMarkers(null, true, IResource.DEPTH_INFINITE);
 				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-				File[] files = project.getFolder(MSetting.FOLDER_BIN).getRawLocation().toFile().listFiles();
-				monitor.beginTask("cleaning...", files.length + 1);
-				for(File file:files){
-					try{
-						file.delete();
-						monitor.worked(1);
-					}catch(Exception e){
-						System.out.println(file.getName());
-						e.printStackTrace();
+				File[] folders = new File[3];
+				folders[0] = project.getFolder(MSetting.FOLDER_BIN).getRawLocation().toFile();
+				folders[1] = project.getFolder(MSetting.FOLDER_PMC).getRawLocation().toFile();
+				folders[2] = project.getFolder(MSetting.FOLDER_UMC).getRawLocation().toFile();
+
+				monitor.beginTask("cleaning...", 4);
+				
+				for(int i = 0; i < 3; ++i){
+					File[] files = folders[i].listFiles();
+					for(File file:files){
+						try{
+							file.delete();
+						}catch(Exception e){
+							e.printStackTrace();
+						}
 					}
+					monitor.worked(1);
 				}
 				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+				MConsole.clear();
 				monitor.done();
 			}catch(CoreException e){
 				e.printStackTrace();

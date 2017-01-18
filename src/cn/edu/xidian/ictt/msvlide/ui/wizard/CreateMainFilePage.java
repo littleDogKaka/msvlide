@@ -1,5 +1,7 @@
 package cn.edu.xidian.ictt.msvlide.ui.wizard;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -18,6 +20,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
+
+import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
 /**
  * The "New" wizard page allows setting the container for the new file as well
@@ -43,7 +47,7 @@ public class CreateMainFilePage extends WizardPage {
 	public CreateMainFilePage(ISelection selection) {
 		super("wizardPage");
 		setTitle("Create MSVL Main File");
-		setDescription("Create a new file with *.m extension.");
+		setDescription("Create a new file with " + MSetting.FILE_MAIN_SUFFIX + " extension.");
 		this.selection = selection;
 	}
 
@@ -103,13 +107,7 @@ public class CreateMainFilePage extends WizardPage {
 				return;
 			Object obj = ssel.getFirstElement();
 			if (obj instanceof IResource) {
-				//IContainer container;
-				//if (obj instanceof IContainer)
-					//container = (IContainer) obj;
-				//else
-					//container = ((IResource) obj).getParent();
-				//containerText.setText(container.getFullPath().toString());
-				String path = ((IResource)obj).getProject().getFolder("src").getRawLocation().toString();
+				String path = ((IResource)obj).getProject().getFolder(MSetting.FOLDER_SRC).getRawLocation().toString();
 				containerText.setText(path);
 				containerText.setEnabled(false);
 				button.setEnabled(false);
@@ -119,7 +117,7 @@ public class CreateMainFilePage extends WizardPage {
 				button.setEnabled(true);
 			}
 		}
-		fileText.setText("main.m");
+		fileText.setText(MSetting.FILE_MAIN_NAME + MSetting.FILE_MAIN_SUFFIX);
 	}
 
 	/**
@@ -156,7 +154,23 @@ public class CreateMainFilePage extends WizardPage {
 		if (container == null || (container.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
 			updateStatus("File container must exist");
 			return;
+		}else{
+			IProject project = container.getProject();
+			IFolder folder = project.getFolder(MSetting.FOLDER_SRC);
+			if(folder == null || !folder.exists()){
+				updateStatus("Note: .m file must be placed in \"" + MSetting.FOLDER_SRC + "\"!");
+				return;
+			}else{
+				String[] names = folder.getRawLocation().toFile().list();
+				for(String name:names){
+					if(name.endsWith(MSetting.FILE_MAIN_SUFFIX)){
+						updateStatus("Note: There must be only one .m file in a MSVL Project!");
+						return;
+					}
+				}
+			}
 		}
+		
 		if (!container.isAccessible()) {
 			updateStatus("Project must be writable");
 			return;
@@ -169,13 +183,9 @@ public class CreateMainFilePage extends WizardPage {
 			updateStatus("File name must be valid");
 			return;
 		}
-		int dotLoc = fileName.lastIndexOf('.');
-		if (dotLoc != -1) {
-			String ext = fileName.substring(dotLoc + 1);
-			if (ext.equalsIgnoreCase("m") == false) {
-				updateStatus("File extension must be \"m\"");
-				return;
-			}
+		if(!fileName.endsWith(MSetting.FILE_MAIN_SUFFIX)){
+			updateStatus("File extension must be \"" + MSetting.FILE_MAIN_SUFFIX + "\"");
+			return;
 		}
 		updateStatus(null);
 	}
@@ -191,7 +201,7 @@ public class CreateMainFilePage extends WizardPage {
 			return "";
 		Object obj = ssel.getFirstElement();
 		if (obj instanceof IResource) {
-			return "/" + ((IResource) obj).getProject().getName() + "/src";
+			return "/" + ((IResource) obj).getProject().getName() + "/" + MSetting.FOLDER_SRC;
 		}
 		return containerText.getText();
 	}

@@ -4,6 +4,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 //import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 //import org.eclipse.core.resources.ResourcesPlugin;
 //import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelection;
@@ -15,6 +16,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import cn.edu.xidian.ictt.msvlide.Activator;
+import cn.edu.xidian.ictt.msvlide.project.builder.MSVLNature;
 //import cn.edu.xidian.ictt.msvlide.project.builder.MSVLNature;
 
 
@@ -99,5 +101,15 @@ public class MProject {
 	        }  
 	     }
 		return file;
+	}
+	
+	public static boolean isMSVLProject(IProject project){
+		boolean rtn = false;
+		try {
+			rtn = project.hasNature(MSVLNature.NATURE_ID);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+		return rtn;
 	}
 }

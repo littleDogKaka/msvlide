@@ -211,7 +211,7 @@ public class ConfigTabMain extends AbstractLaunchConfigurationTab{
 	
 	private void init(ILaunchConfiguration config){
 		try {
-			String projectName = config.getAttribute(LaunchConfig.LAUNCH_CONFIGURATION_PROJECT_NAME_KEY, "");
+			String projectName = config.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, "");
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 			if(project == null){
 				isOutputBtn.setSelection(false);
@@ -267,29 +267,29 @@ public class ConfigTabMain extends AbstractLaunchConfigurationTab{
 	}
 	
 	@Override
-	public void performApply(ILaunchConfigurationWorkingCopy config) {
+	public void performApply(ILaunchConfigurationWorkingCopy wc) {
 		try {
-			String projectName = config.getAttribute(LaunchConfig.LAUNCH_CONFIGURATION_PROJECT_NAME_KEY, "");
+			String projectName = wc.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, "");
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 			if(project != null){
 				storeProperty(project);
 			}
-			config.doSave();
+			wc.doSave();
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void setDefaults(ILaunchConfigurationWorkingCopy config) {
+	public void setDefaults(ILaunchConfigurationWorkingCopy wc) {
 		try {
-			String projectName = config.getAttribute(LaunchConfig.LAUNCH_CONFIGURATION_PROJECT_NAME_KEY, "");
+			String projectName = wc.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, "");
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 			if(project != null){
 				Property.init(project);
 			}
-			init(config);
-			config.doSave();
+			init(wc);
+			wc.doSave();
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

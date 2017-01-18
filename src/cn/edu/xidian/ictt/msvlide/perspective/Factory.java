@@ -16,6 +16,7 @@ public class Factory implements IPerspectiveFactory{
 	private static final String NEW_MAINFILE_WIZARD_ID = "cn.edu.xidian.ictt.msvlide.newwizards.CreateMainFile";
 	private static final String NEW_FUNCFILE_WIZARD_ID = "cn.edu.xidian.ictt.msvlide.newwizards.CreateFuncFile";
 	private static final String NEW_HEADERFILE_WIZARD_ID = "cn.edu.xidian.ictt.msvlide.newwizards.CreateHeaderFile";
+	private static final String NEW_PROPERTY_WIZARD_ID = "cn.edu.xidian.ictt.msvlide.newwizards.CreatePropertyFile";
 	
 	@Override
 	public void createInitialLayout(IPageLayout layout) {
@@ -39,6 +40,7 @@ public class Factory implements IPerspectiveFactory{
 		layout.addNewWizardShortcut(NEW_MAINFILE_WIZARD_ID);
 		layout.addNewWizardShortcut(NEW_FUNCFILE_WIZARD_ID);
 		layout.addNewWizardShortcut(NEW_HEADERFILE_WIZARD_ID);
+		layout.addNewWizardShortcut(NEW_PROPERTY_WIZARD_ID);
 		
 		layout.addPerspectiveShortcut(MSVL_PERSPECTIVE_ID);
 	}

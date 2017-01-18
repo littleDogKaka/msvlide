@@ -1,9 +1,6 @@
 package cn.edu.xidian.ictt.msvlide.action;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -15,7 +12,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import cn.edu.xidian.ictt.msvlide.console.MConsole;
+import cn.edu.xidian.ictt.msvlide.console.DisplayOutput;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
@@ -50,12 +47,8 @@ public class Verilog2MSVLAction implements IWorkbenchWindowActionDelegate{
 		String[] args = {MSetting.CONVERT_VERILOG_TO_MSVL, input, filename + MSetting.FILE_MAIN_SUFFIX};
 		try {
 			Process p = Runtime.getRuntime().exec(args, null, wd);
-			InputStream in = p.getInputStream();
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String line;
-			while((line = br.readLine()) != null){
-				MConsole.print(line,true);
-			}
+			new Thread(new DisplayOutput(p.getInputStream(), "Verilog2MSVL")).start();
+			new Thread(new DisplayOutput(p.getErrorStream(), "Verilog2MSVL")).start();
 			p.waitFor();
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Exception e) {

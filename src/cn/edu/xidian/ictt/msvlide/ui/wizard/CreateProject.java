@@ -9,6 +9,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 import cn.edu.xidian.ictt.msvlide.project.builder.MSVLNature;
@@ -56,8 +60,8 @@ public class CreateProject extends BasicNewProjectResourceWizard{
 			IFolder src_verlog_Folder = project.getFolder(MSetting.FOLDER_SRC_VERILOG);
 			IFolder src_vhdl_Folder = project.getFolder(MSetting.FOLDER_SRC_VHDL);
 			
-			IFolder out_umc = project.getFolder(MSetting.FOLDER_OUT_UMC);
-			IFolder out_pmc = project.getFolder(MSetting.FOLDER_OUT_PMC);
+			IFolder out_umc = project.getFolder(MSetting.FOLDER_UMC);
+			IFolder out_pmc = project.getFolder(MSetting.FOLDER_PMC);
 			
 			srcFolder.create(true, true, null);
 			binFolder.create(true, true, null);
@@ -67,8 +71,17 @@ public class CreateProject extends BasicNewProjectResourceWizard{
 			out_umc.create(true, true, null);
 			out_pmc.create(true, true, null);
 			
-			IFile main = srcFolder.getFile(MSetting.FILE_MAIN_NAME);
+			IFile main = srcFolder.getFile(MSetting.FILE_MAIN_NAME + MSetting.FILE_MAIN_SUFFIX);
 			main.create(new ByteArrayInputStream(MSetting.FILE_MAIN_INIT.getBytes()), true, null);
+			
+			getShell().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					try {
+						IDE.openEditor(page, main, true);
+					} catch (PartInitException e) {}
+				}
+			});
 			
 			Property.init(project);
 		} catch (CoreException e) {

@@ -1,47 +1,53 @@
 package cn.edu.xidian.ictt.msvlide.ui.wizard;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.core.runtime.*;
-import org.eclipse.jface.operation.*;
-import java.lang.reflect.InvocationTargetException;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
-import java.io.*;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
 import cn.edu.xidian.ictt.msvlide.Activator;
-import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
-public class CreateMainFile extends Wizard implements INewWizard {
-	private CreateMainFilePage page;
-	private ISelection selection;
+public abstract class CreateFile extends Wizard implements INewWizard{
 
-	public CreateMainFile() {
+	protected CreateFilePage page;
+	protected String initContent = "";
+	
+	public CreateFile(){
 		super();
 		setNeedsProgressMonitor(true);
 	}
 	
-	/**
-	 * We will accept the selection in the workbench to see if
-	 * we can initialize from it.
-	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
-	 */
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		this.selection = selection;
-		this.setWindowTitle("MSVL Project - Create Main File");
-	}
+//	@Override
+//	public void init(IWorkbench workbench, IStructuredSelection selection) {
+//		this.selection = selection;
+//		this.setWindowTitle("MSVL Project - Create " + type + " File");
+//	}
+	
 	
 	public void addPages() {
-		page = new CreateMainFilePage(selection);
 		addPage(page);
 	}
-
+	
+	@Override
 	public boolean performFinish() {
 		final String containerName = page.getContainerName();
 		final String fileName = page.getFileName();
@@ -69,13 +75,6 @@ public class CreateMainFile extends Wizard implements INewWizard {
 		}
 		return true;
 	}
-	
-	/**
-	 * The worker method. It will find the container, create the
-	 * file if missing or just replace its contents, and open
-	 * the editor on the newly created file.
-	 */
-
 	private void doFinish(String containerName, String fileName, IProgressMonitor monitor) throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + fileName, 2);
@@ -115,7 +114,7 @@ public class CreateMainFile extends Wizard implements INewWizard {
 	}
 	
 	private InputStream openContentStream() {
-		String contents = MSetting.FILE_MAIN_INIT;
+		String contents = initContent;
 		return new ByteArrayInputStream(contents.getBytes());
 	}
 
@@ -123,5 +122,4 @@ public class CreateMainFile extends Wizard implements INewWizard {
 		IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, IStatus.OK, message, null);
 		throw new CoreException(status);
 	}
-
 }

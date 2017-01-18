@@ -23,8 +23,8 @@ public class Property {
 		project.setPersistentProperty(new QualifiedName("",PType.WORKINGDIR.toString()),project.getLocation().toString());
 	}
 	
-	public static void setDefault(IProject _project) throws CoreException{
-		init(_project);
+	public static void setDefault(IProject project) throws CoreException{
+		init(project);
 	}
 
 	

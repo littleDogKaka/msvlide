@@ -1,10 +1,7 @@
 package cn.edu.xidian.ictt.msvlide.action;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.IFile;
@@ -24,7 +21,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import cn.edu.xidian.ictt.msvlide.console.MConsole;
+import cn.edu.xidian.ictt.msvlide.console.DisplayOutput;
 import cn.edu.xidian.ictt.msvlide.launch.LaunchConfig;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
@@ -71,7 +68,7 @@ public class PMCheckerAction implements IWorkbenchWindowActionDelegate{
 		}
 		
 		String input = file.getRawLocation().toString().replace("/", "\\");
-		File wd = file.getProject().getFolder(MSetting.FOLDER_OUT_PMC).getRawLocation().toFile();
+		File wd = file.getProject().getFolder(MSetting.FOLDER_PMC).getRawLocation().toFile();
 		String[] args = {MSetting.PMCHECKER, input};
 		
 		try {
@@ -85,12 +82,12 @@ public class PMCheckerAction implements IWorkbenchWindowActionDelegate{
 			Thread.sleep(100);
 			
 			IProject project = file.getProject();
-			IFolder out = project.getFolder(MSetting.FOLDER_OUT_PMC);
+			IFolder out = project.getFolder(MSetting.FOLDER_PMC);
 			IFile runFile = out.getFile(MSetting.PMC_RUNFILE_NAME);
 			if(runFile.isAccessible()){
-				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIGURATION_MODE_PMC, project.getName());
+				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_PMC, project);
 				try {
-					config.launch(LaunchConfig.LAUNCH_CONFIGURATION_MODE_PMC, null, true);
+					config.launch(LaunchConfig.LAUNCH_CONFIG_MODE_PMC, null, true);
 				} catch (CoreException e) {
 					e.printStackTrace();
 				}
@@ -107,36 +104,6 @@ public class PMCheckerAction implements IWorkbenchWindowActionDelegate{
 		String[] btns = {"OK"};
 		MessageDialog dialog = new MessageDialog(window.getShell(),"Parallel Model Checker", null,"Please choose a " + MSetting.FILE_MAIN_SUFFIX + " file in directory \"src\"", MessageDialog.WARNING,btns,0); 
 		dialog.open();
-	}
-	
-	class DisplayOutput implements Runnable{
-		
-		private String filename;
-		private InputStream input;
-		
-		public DisplayOutput(InputStream input,String filename){
-			this.input = input;
-			this.filename = filename;
-		}
-		
-		@Override
-		public void run() {
-			try {
-	            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-	            String line;
-	            while ((line = reader.readLine()) != null) {
-	            	MConsole.print(filename + ": " + line, true);
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        } finally {
-	            try {
-	                input.close();
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-		}
 	}
 
 	@Override

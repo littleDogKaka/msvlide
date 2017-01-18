@@ -11,6 +11,24 @@
 			<run class="cn.edu.xidian.ictt.msvlide.project.builder.MSVLBuilder"></run>
 		</builder>
 	</extension>
+	
+	<extension
+		id="PMCBuilder"
+		name="%MSVL.Project.PMC.Builder"
+		point="org.eclipse.core.resources.builders">
+		<builder hasNature="true">
+			<run class="cn.edu.xidian.ictt.msvlide.project.builder.PMCBuilder"></run>
+		</builder>
+	</extension>
+	
+	<extension
+		id="UMCBuilder"
+		name="%MSVL.Project.UMC.Builder"
+		point="org.eclipse.core.resources.builders">
+		<builder hasNature="true">
+			<run class="cn.edu.xidian.ictt.msvlide.project.builder.UMCBuilder"></run>
+		</builder>
+	</extension>
    
 	<extension
 		id="MSVLNature"
@@ -22,16 +40,35 @@
 		<builder
 			id="cn.edu.xidian.ictt.msvlide.MSVLBuilder">
 		</builder>
+		<builder
+			id="cn.edu.xidian.ictt.msvlide.PMCBuilder">
+		</builder>
+		<builder
+			id="cn.edu.xidian.ictt.msvlide.UMCBuilder">
+		</builder>
 	</extension>
+	
 	<extension
-		point="org.eclipse.ui.ide.projectNatureImages">
+       id="MSVLNatureImages"
+       name="%MSVL.Project.Nature.Images.Name"
+       point="org.eclipse.ui.ide.projectNatureImages">
 		<image
 			id="cn.edu.xidian.ictt.msvlide.project.nature.image"
 			icon="icons/m_16.png"
 			natureId="cn.edu.xidian.ictt.msvlide.MSVLNature">
 		</image>
 	</extension>
-   <!-- Builder and Nature end -->
+	<!-- Builder and Nature end -->
+	
+	<extension
+		id="cn.edu.xidian.ictt.msvlide.marker.project"
+		point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.core.resources.marker"/>
+		<super type="org.eclipse.core.resources.problemmarker"/>
+		<persistent value="true"/>
+		<attribute name="severity"/>
+		<attribute name="message"/>
+	</extension>
 
 	<!-- new project start-->
 	<extension
@@ -75,6 +112,14 @@
             id="cn.edu.xidian.ictt.msvlide.newwizards.CreateHeaderFile">
             <description>%MSVL.File.New.Header.Description</description>
 		</wizard>
+		<wizard
+			name="%MSVL.File.New.Property"
+            icon="icons/sample.gif"
+            category="cn.edu.xidian.ictt.msvlide.newwizards.category"
+            class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreatePropertyFile"
+            id="cn.edu.xidian.ictt.msvlide.newwizards.CreatePropertyFile">
+            <description>%MSVL.File.New.Property.Description</description>
+		</wizard>
 	</extension>
 	<!-- new project end-->
 	
@@ -101,7 +146,7 @@
 		point="org.eclipse.ui.console.consoleFactories">
 		<consoleFactory 
 			label="%MSVL.Builder.Console"
-			class="cn.edu.xidian.ictt.msvlide.console.MessageConsoleFactory"
+			class="cn.edu.xidian.ictt.msvlide.console.MConsole"
 			icon="icons/console_16.ico">
 		</consoleFactory>
 	</extension>
@@ -190,7 +235,6 @@
 				class="cn.edu.xidian.ictt.msvlide.action.CleanAction">
 			</action>
 		</actionSet>
-		
 		<!-- Model Checker -->
 		<actionSet
 			label="%MSVL.ActionSet.ModelChecker"
@@ -229,42 +273,94 @@
 	</extension>
 	<!-- action sets end -->
 	
-	<!-- launch start -->
 	<extension
-		point="org.eclipse.debug.core.launchConfigurationTypes">
-		<launchConfigurationType
-			id= "cn.edu.xidian.ictt.msvlide.launch.ConfigurationType"
-			delegate= "cn.edu.xidian.ictt.msvlide.launch.LaunchDelegate"
-			modes= "run, debug, pmc, umc"
-			name= "%MSVL.LaunchConfig.Name"
-			delegateName="%MSVL.LaunchConfig.Delegate.Name"
-			delegateDescription="%MSVL.LaunchConfig.Delegate.Description">
-		</launchConfigurationType>
+		point="org.eclipse.ui.perspectives">
+		<perspective
+			id="cn.edu.xidian.ictt.msvlide.perspective"
+			name="MSVL"
+			icon="icons/sample.gif"
+			class="cn.edu.xidian.ictt.msvlide.perspective.Factory">
+			<description>%MSVL.Perspective.Description</description>
+		</perspective>
 	</extension>
 	
+	<!-- launch start -->
 	<extension
 		point="org.eclipse.debug.ui.launchShortcuts">
 		<shortcut
-			class= "cn.edu.xidian.ictt.msvlide.launch.Shortcut"
+			class= "cn.edu.xidian.ictt.msvlide.launch.RUNShortcut"
 			icon= "icons/console_16.ico"
 			id= "cn.edu.xidian.ictt.msvlide.launch.launchshortcut"
 			label= "%MSVL.LaunchShortcut.Name"
 			modes= "run, debug" >
 			<contextualLaunch>
 				<enablement>
-					<with
-						variable= "selection">
+					<with variable= "selection">
 						<count
 							value= "1">
 						</count>
 						<iterate>
-							<adapt
-								type="org.eclipse.core.resources.IProject">
-								<test
-									value="cn.edu.xidian.ictt.msvlide.MSVLNature"
-									property="org.eclipse.core.resources.projectNature">
-								</test>
-							</adapt>
+							<or>
+								<adapt type="org.eclipse.core.resources.IProject">
+									<test property="org.eclipse.core.resources.projectNature" value="cn.edu.xidian.ictt.msvlide.MSVLNature"/>
+								</adapt>
+								<adapt type="org.eclipse.core.resources.IFolder">
+									<test property="org.eclipse.debug.ui.matchesPattern" value="bin"/>
+								</adapt>
+								<adapt type="org.eclipse.core.resources.IFile">
+									<test property="org.eclipse.debug.ui.matchesPattern" value="[\s|\S]+.m$"/>
+								</adapt>
+							</or>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+		</shortcut>
+		
+		<shortcut
+			class= "cn.edu.xidian.ictt.msvlide.launch.PMCShortcut"
+			icon= "icons/console_16.ico"
+			id= "cn.edu.xidian.ictt.msvlide.launch.modelcheckershortcut"
+			label= "%MSVL.ParallelModelChecker.Shortcut.Name"
+			modes= "run" >
+			<contextualLaunch>
+				<enablement>
+					<with variable= "selection">
+						<count value= "1"></count>
+						<iterate>
+							<or>
+								<adapt type="org.eclipse.core.resources.IFolder">
+									<test property="org.eclipse.debug.ui.matchesPattern" value="pmc"/>
+								</adapt>
+								<adapt type="org.eclipse.core.resources.IFile">
+									<test property="org.eclipse.debug.ui.matchesPattern" value="[\s|\S]+.p$"/>
+								</adapt>
+							</or>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+		</shortcut>
+		
+		<shortcut
+			class= "cn.edu.xidian.ictt.msvlide.launch.UMCShortcut"
+			icon= "icons/console_16.ico"
+			id= "cn.edu.xidian.ictt.msvlide.launch.modelcheckershortcut"
+			label= "%MSVL.UnifiedModelChecker.Shortcut.Name"
+			modes= "run" >
+			<contextualLaunch>
+				<enablement>
+					<with variable= "selection">
+						<count value= "1"></count>
+						<iterate>
+							<or>
+								<adapt type="org.eclipse.core.resources.IFolder">
+									<test property="org.eclipse.debug.ui.matchesPattern" value="umc"/>
+								</adapt>
+								<adapt type="org.eclipse.core.resources.IFile">
+									<test property="org.eclipse.debug.ui.matchesPattern" value="[\s|\S]+.p$"/>
+								</adapt>
+							</or>
 						</iterate>
 					</with>
 				</enablement>
@@ -288,14 +384,6 @@
 				perspective="cn.edu.xidian.ictt.msvlide.perspective"
 				description="%MSVL.LaunchConfigurationTabGroups.Debug.Description">
             </launchMode>
-            <launchMode
-				mode="umc"
-				description="%MSVL.LaunchConfigurationTabGroups.PMC.Description">
-            </launchMode>
-            <launchMode
-				mode="pmc"
-				description="%MSVL.LaunchConfigurationTabGroups.UMC.Description">
-            </launchMode>
 		</launchConfigurationTabGroup>
 	</extension>
 	
@@ -307,9 +395,28 @@
 			id= "cn.edu.xidian.ictt.msvlide.ui.launch.ConfigurationTypeImage" >
 		</launchConfigurationTypeImage>
 	</extension>
+	
+	<extension
+		point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType
+			id= "cn.edu.xidian.ictt.msvlide.launch.ConfigurationType"
+			delegate= "cn.edu.xidian.ictt.msvlide.launch.LaunchDelegate"
+			modes= "run, debug, pmc, umc"
+			name= "%MSVL.LaunchConfig.Name"
+			delegateName="%MSVL.LaunchConfig.Delegate.Name"
+			delegateDescription="%MSVL.LaunchConfig.Delegate.Description">
+		</launchConfigurationType>
+		
+	</extension>
 	<!-- launch end -->
 	
 	<!-- commands and handlers start 
+	<extension
+		point="org.eclipse.ui.menus">
+		<menuContribution>
+
+		</menuContribution>
+	</extension>
 	<extension
 		point="org.eclipse.ui.commands">
 		<command
@@ -327,29 +434,6 @@
 		</handler>
 	</extension>
 	 commands handlers end-->
-	
-	<extension
-		point="org.eclipse.ui.perspectives">
-		<perspective
-			id="cn.edu.xidian.ictt.msvlide.perspective"
-			name="MSVL"
-			icon="icons/sample.gif"
-			class="cn.edu.xidian.ictt.msvlide.perspective.Factory">
-			
-			<description>%MSVL.Perspective.Description</description>
-		</perspective>
-	</extension>
-	
-	<extension
-		point="org.eclipse.core.runtime.adapters">
-		<factory 
-			class="cn.edu.xidian.ictt.msvlide.launch.MAdapterFactory"
-			adaptableType="org.eclipse.core.resources.IResource">
-			<adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
-		</factory>
-	</extension>
-
-
 	
 </plugin>
 

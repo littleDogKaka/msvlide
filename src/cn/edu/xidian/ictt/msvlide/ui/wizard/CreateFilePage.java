@@ -19,31 +19,26 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
-/**
- * The "New" wizard page allows setting the container for the new file as well
- * as the file name. The page will only accept file name without the extension
- * OR with the extension that matches the expected one (func).
- */
 
-public class CreateFuncFilePage extends WizardPage {
-	private Text containerText;
-
-	private Text fileText;
-
-	private Button button;
+public class CreateFilePage extends WizardPage{
 	
+	private Text containerText;
+	private Text fileText;
+	private Button button;
 	private ISelection selection;
-
-	/**
-	 * Constructor for SampleNewWizardPage.
-	 * 
-	 * @param pageName
-	 */
-	public CreateFuncFilePage(ISelection selection) {
-		super("wizardPage");
-		setTitle("Create MSVL Function File");
-		setDescription("Create a new file with *.func extension.");
+	
+	private String initname;
+	private String suffix;
+	private String folder;
+	
+	public CreateFilePage(ISelection selection,String title, String description, String initFilename, String suffix, String folder) {
+		super("");
+		setTitle(title);
+		setDescription(description);
 		this.selection = selection;
+		this.initname = initFilename;
+		this.suffix = suffix;
+		this.folder = folder;
 	}
 
 	/**
@@ -74,6 +69,7 @@ public class CreateFuncFilePage extends WizardPage {
 				handleBrowse();
 			}
 		});
+		
 		label = new Label(container, SWT.NULL);
 		label.setText("&File name:");
 
@@ -95,20 +91,13 @@ public class CreateFuncFilePage extends WizardPage {
 	 */
 
 	private void initialize() {
-		if (selection != null && selection.isEmpty() == false
-				&& selection instanceof IStructuredSelection) {
+		if (selection != null && selection.isEmpty() == false && selection instanceof IStructuredSelection) {
 			IStructuredSelection ssel = (IStructuredSelection) selection;
 			if (ssel.size() > 1)
 				return;
 			Object obj = ssel.getFirstElement();
 			if (obj instanceof IResource) {
-				//IContainer container;
-				//if (obj instanceof IContainer)
-					//container = (IContainer) obj;
-				//else
-					//container = ((IResource) obj).getParent();
-				//containerText.setText(container.getFullPath().toString());
-				String path = ((IResource)obj).getProject().getFolder("src").getRawLocation().toString();
+				String path = ((IResource)obj).getProject().getFolder(folder).getRawLocation().toString();
 				containerText.setText(path);
 				containerText.setEnabled(false);
 				button.setEnabled(false);
@@ -118,7 +107,7 @@ public class CreateFuncFilePage extends WizardPage {
 				button.setEnabled(true);
 			}
 		}
-		fileText.setText("new.func");
+		fileText.setText(initname + suffix);
 	}
 
 	/**
@@ -133,7 +122,8 @@ public class CreateFuncFilePage extends WizardPage {
 		if (dialog.open() == ContainerSelectionDialog.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {
-				containerText.setText(((Path) result[0]).toString());
+				String path = ((Path) result[0]).toString();
+				containerText.setText(path);
 			}
 		}
 	}
@@ -143,16 +133,15 @@ public class CreateFuncFilePage extends WizardPage {
 	 */
 
 	private void dialogChanged() {
-		IResource container = ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(new Path(getContainerName()));
+		IResource container = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(getContainerName()));
+		
 		String fileName = getFileName();
 
 		if (getContainerName().length() == 0) {
 			updateStatus("File container must be specified");
 			return;
 		}
-		if (container == null
-				|| (container.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
+		if (container == null || (container.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
 			updateStatus("File container must exist");
 			return;
 		}
@@ -168,13 +157,10 @@ public class CreateFuncFilePage extends WizardPage {
 			updateStatus("File name must be valid");
 			return;
 		}
-		int dotLoc = fileName.lastIndexOf('.');
-		if (dotLoc != -1) {
-			String ext = fileName.substring(dotLoc + 1);
-			if (ext.equalsIgnoreCase("func") == false) {
-				updateStatus("File extension must be \"func\"");
-				return;
-			}
+		
+		if (!fileName.endsWith(suffix)) {
+			updateStatus("File extension must be \"" + suffix + "\"");
+			return;
 		}
 		updateStatus(null);
 	}
@@ -190,7 +176,7 @@ public class CreateFuncFilePage extends WizardPage {
 			return "";
 		Object obj = ssel.getFirstElement();
 		if (obj instanceof IResource) {
-			return "/" + ((IResource) obj).getProject().getName() + "/src";
+			return "/" + ((IResource) obj).getProject().getName() + "/" + folder;
 		}
 		return containerText.getText();
 	}
