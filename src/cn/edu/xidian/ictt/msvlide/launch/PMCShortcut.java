@@ -2,7 +2,6 @@ package cn.edu.xidian.ictt.msvlide.launch;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -11,6 +10,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 
 import cn.edu.xidian.ictt.msvlide.Activator;
+import cn.edu.xidian.ictt.msvlide.console.MConsole;
 import cn.edu.xidian.ictt.msvlide.project.builder.PMCBuilder;
 import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
@@ -21,10 +21,15 @@ public class PMCShortcut extends LaunchShortcut{
 		if(!file.getName().endsWith(MSetting.FILE_PROPERTY_SUFFIX)){
 			return;
 		}
-
-		Map<String,String> map = new HashMap<String,String>();
+		
+		if(!MSetting.FOLDER_SRC.equals(file.getParent().getName())){
+			MConsole.print("ERROR: " + MSetting.FILE_PROPERTY_SUFFIX + " file must be placed in " + MSetting.FOLDER_SRC, true);
+			return;
+		}
+		
+		HashMap<String,String> map = new HashMap<String,String>();
 		map.put(MSetting.BUILD_MAP_KEY_MODE, MSetting.BUILD_MODE_PMC);
-		map.put(MSetting.BUILD_MAP_KEY_FILE_PROPERTY, file.getFullPath().toOSString());
+		map.put(MSetting.BUILD_MAP_KEY_FILE_PROPERTY, file.getName());
 		
 		try {
 			ProgressMonitorDialog dialog = new ProgressMonitorDialog(Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());

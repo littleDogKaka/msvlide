@@ -11,10 +11,10 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
+import cn.edu.xidian.ictt.msvlide.Activator;
 import cn.edu.xidian.ictt.msvlide.project.builder.MSVLNature;
 import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 import cn.edu.xidian.ictt.msvlide.project.util.Property;
@@ -76,7 +76,7 @@ public class CreateProject extends BasicNewProjectResourceWizard{
 			
 			getShell().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					IWorkbenchPage page = Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					try {
 						IDE.openEditor(page, main, true);
 					} catch (PartInitException e) {}

@@ -1,8 +1,7 @@
 package cn.edu.xidian.ictt.msvlide.action;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -21,8 +20,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import cn.edu.xidian.ictt.msvlide.console.DisplayOutput;
 import cn.edu.xidian.ictt.msvlide.launch.LaunchConfig;
+import cn.edu.xidian.ictt.msvlide.project.builder.PMCBuilder;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
@@ -62,21 +61,14 @@ public class PMCheckerAction implements IWorkbenchWindowActionDelegate{
 			return;
 		}
 		String filename = file.getName();
-		if(!filename.endsWith(MSetting.FILE_MAIN_SUFFIX)){
+		if(!filename.endsWith(MSetting.FILE_PROPERTY_SUFFIX)){
 			showDialog();
 			return;
 		}
 		
-		String input = file.getRawLocation().toString().replace("/", "\\");
-		File wd = file.getProject().getFolder(MSetting.FOLDER_PMC).getRawLocation().toFile();
-		String[] args = {MSetting.PMCHECKER, input};
-		
 		try {
-			Process p = Runtime.getRuntime().exec(args, null, wd);
-			new Thread(new DisplayOutput(p.getInputStream(), "PMC")).start();
-			new Thread(new DisplayOutput(p.getErrorStream(), "PMC")).start();
 			ProgressMonitorDialog dialog = new ProgressMonitorDialog(window.getShell());
-			dialog.run(true, true, new Wait(p));
+			dialog.run(true, true, new Build(filename));
 			
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 			Thread.sleep(100);
@@ -94,7 +86,7 @@ public class PMCheckerAction implements IWorkbenchWindowActionDelegate{
 			}
 			
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (IOException | InvocationTargetException | InterruptedException | CoreException  e) {//| InterruptedException
+		} catch (InvocationTargetException | InterruptedException | CoreException  e) {//| InterruptedException
 			e.printStackTrace();
 		}
 		
@@ -102,35 +94,30 @@ public class PMCheckerAction implements IWorkbenchWindowActionDelegate{
 
 	private void showDialog(){
 		String[] btns = {"OK"};
-		MessageDialog dialog = new MessageDialog(window.getShell(),"Parallel Model Checker", null,"Please choose a " + MSetting.FILE_MAIN_SUFFIX + " file in directory \"src\"", MessageDialog.WARNING,btns,0); 
+		MessageDialog dialog = new MessageDialog(window.getShell(),"Parallel Model Checker", null,"Please choose a " + MSetting.FILE_PROPERTY_SUFFIX + " file in " + MSetting.FOLDER_SRC, MessageDialog.WARNING,btns,0); 
 		dialog.open();
 	}
 
 	@Override
 	public void dispose() {}
 
-	class Wait implements IRunnableWithProgress{
-		private Process p;
-		public Wait(Process p){
-			this.p = p;
+	class Build implements IRunnableWithProgress{
+		String pFilename;
+		
+		public Build(String pFilename){
+			this.pFilename = pFilename;
 		}
 		
 		@Override
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException{
-			monitor.beginTask("Handling...",100);
-			int i = 0;
-			while(p.isAlive()){
-				Thread.sleep(500);
-				if(monitor.isCanceled()){
-					p.destroy();
-				}else{
-					if(i < 95){
-						monitor.worked(1);
-					}
-					i++;
-				}
+			try{
+				HashMap<String,String> map = new HashMap<String,String>();
+				map.put(MSetting.BUILD_MAP_KEY_MODE, MSetting.BUILD_MODE_PMC);
+				map.put(MSetting.BUILD_MAP_KEY_FILE_PROPERTY, pFilename);
+				file.getProject().build(PMCBuilder.FULL_BUILD, PMCBuilder.BUILDER_ID, map, monitor);
+			}catch(CoreException e){
+				e.printStackTrace();
 			}
-			monitor.done();
 		}
 	}
 }

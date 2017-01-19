@@ -1,8 +1,7 @@
 package cn.edu.xidian.ictt.msvlide.action;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -21,8 +20,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import cn.edu.xidian.ictt.msvlide.console.DisplayOutput;
 import cn.edu.xidian.ictt.msvlide.launch.LaunchConfig;
+import cn.edu.xidian.ictt.msvlide.project.builder.UMCBuilder;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
@@ -62,24 +61,18 @@ public class UMCheckerAction implements IWorkbenchWindowActionDelegate{
 			return;
 		}
 		String filename = file.getName();
-		if(!filename.endsWith(MSetting.FILE_MAIN_SUFFIX)){
+		if(!filename.endsWith(MSetting.FILE_PROPERTY_SUFFIX)){
 			showDialog();
 			return;
 		}
 		
-		String input = file.getRawLocation().toString().replace("/", "\\");
-		File wd = file.getProject().getFolder(MSetting.FOLDER_UMC).getRawLocation().toFile();
-		String[] args = {MSetting.UMCHECKER, input};
 		
 		try {
-			Process p = Runtime.getRuntime().exec(args, null, wd);
-			new Thread(new DisplayOutput(p.getInputStream(), "UMC")).start();
-			new Thread(new DisplayOutput(p.getErrorStream(), "UMC")).start();
 			ProgressMonitorDialog dialog = new ProgressMonitorDialog(window.getShell());
-			dialog.run(true, true, new Wait(p));
+			dialog.run(true, true, new Build(filename));
 			
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-			Thread.sleep(100); // wait for 
+			Thread.sleep(100);
 			
 			IProject project = file.getProject();
 			IFolder out = project.getFolder(MSetting.FOLDER_UMC);
@@ -94,38 +87,37 @@ public class UMCheckerAction implements IWorkbenchWindowActionDelegate{
 			}
 			
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (IOException | InterruptedException | InvocationTargetException | CoreException e) {
+		} catch (InterruptedException | InvocationTargetException | CoreException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void showDialog(){
 		String[] btns = {"OK"};
-		MessageDialog dialog = new MessageDialog(window.getShell(),"Unified Model Checker", null,"Please choose a " + MSetting.FILE_MAIN_SUFFIX + " file in directory " + MSetting.FOLDER_SRC, MessageDialog.WARNING,btns,0); 
+		MessageDialog dialog = new MessageDialog(window.getShell(),"Unified Model Checker", null,"Please choose a " + MSetting.FILE_PROPERTY_SUFFIX + " file in " + MSetting.FOLDER_SRC, MessageDialog.WARNING,btns,0); 
 		dialog.open();
 	}
 
 	@Override
 	public void dispose() {}
-
-	class Wait implements IRunnableWithProgress{
-		private Process p;
-		public Wait(Process p){
-			this.p = p;
+	
+	class Build implements IRunnableWithProgress{
+		String pFilename;
+		
+		public Build(String pFilename){
+			this.pFilename = pFilename;
 		}
 		
 		@Override
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException{
-			monitor.beginTask("Handling...",100);
-			while(p.isAlive()){
-				Thread.sleep(500);
-				if(monitor.isCanceled()){
-					p.destroy();
-				}else{
-					monitor.worked(1);
-				}
+			try{
+				HashMap<String,String> map = new HashMap<String,String>();
+				map.put(MSetting.BUILD_MAP_KEY_MODE, MSetting.BUILD_MODE_UMC);
+				map.put(MSetting.BUILD_MAP_KEY_FILE_PROPERTY, pFilename);
+				file.getProject().build(UMCBuilder.FULL_BUILD, UMCBuilder.BUILDER_ID, map, monitor);
+			}catch(CoreException e){
+				e.printStackTrace();
 			}
-			monitor.done();
 		}
 	}
 }

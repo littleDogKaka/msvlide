@@ -65,7 +65,6 @@ public abstract class LaunchShortcut implements ILaunchShortcut{
 		private IProject project;
 		private String builderName;
 		private Map<String,String> map;
-
 		public Build(IProject project,String builderName,Map<String,String> map){
 			this.project = project;
 			this.builderName = builderName;
