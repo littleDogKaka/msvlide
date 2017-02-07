@@ -76,9 +76,9 @@ public class UMCheckerAction implements IWorkbenchWindowActionDelegate{
 			
 			IProject project = file.getProject();
 			IFolder out = project.getFolder(MSetting.FOLDER_UMC);
-			IFile runFile = out.getFile(MSetting.UMC_RUNFILE_NAME);
+			IFile runFile = out.getFile(filename.substring(0, filename.length() -2));
 			if(runFile.isAccessible()){
-				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, project);
+				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, project,filename.substring(0, filename.length() -2));
 				try {
 					config.launch(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, null, true);
 				} catch (CoreException e) {

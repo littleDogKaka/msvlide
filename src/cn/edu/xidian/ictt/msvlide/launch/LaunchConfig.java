@@ -15,9 +15,9 @@ public class LaunchConfig {
 	public static final String LAUNCH_CONFIG_TYPE_ID = "cn.edu.xidian.ictt.msvlide.launch.ConfigurationType";
 	public static final String LAUNCH_CONFIG_KEY_MODE = "MSVL_MODE";
 	public static final String LAUNCH_CONFIG_KEY_PROJECT_NAME = "MSVL_PROJECT_NAME";
+	public static final String LAUNCH_CONFIG_KEY_RUN_FILENAME = "MSVL_RUN_FILENAME";
 	public static final String LAUNCH_CONFIG_KEY_WD = "MSVL_RUN_WD";
 	public static final String LAUNCH_CONFIG_KEY_ARGS = "MSVL_RUN_ARGS";
-	//public static final String LAUNCH_CONFIG_KEY_PROPERTY_FILE = "MSVL_CHECKING_PROPERTY_FILE";
 	
 	public static final String LAUNCH_CONFIG_MODE_RUN = "run";
 	public static final String LAUNCH_CONFIG_MODE_DEBUG = "debug";
@@ -33,14 +33,14 @@ public class LaunchConfig {
 		Manager = DebugPlugin.getDefault().getLaunchManager();
 	}
 	
-	public static ILaunchConfiguration find(String mode, IProject project) {
+	public static ILaunchConfiguration find(String mode, IProject project, String name) {
         ILaunchConfiguration configuration = null;
         try {
             ILaunchConfiguration[] configs = Manager.getLaunchConfigurations();
             for (ILaunchConfiguration config: configs) {
                 if (config.getName().equals(name(mode,project))) {
                 	ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
-                	configuration = setWC(wc,project,mode);
+                	configuration = setWC(wc,project,mode,name);
                 	break;
                 }
             }
@@ -48,18 +48,18 @@ public class LaunchConfig {
             e.printStackTrace();
         }
         if (configuration == null) {
-            configuration = create(mode,project);
+            configuration = create(mode,project,name);
         }
         return configuration;
     }
 
-    private static ILaunchConfiguration create(String mode, IProject project) {
+    private static ILaunchConfiguration create(String mode, IProject project,String name) {
         ILaunchConfiguration config = null;
         ILaunchConfigurationType type = Manager.getLaunchConfigurationType(LaunchConfig.LAUNCH_CONFIG_TYPE_ID);
         try {
             if (type != null) {
                 ILaunchConfigurationWorkingCopy wc = type.newInstance(null, Manager.generateLaunchConfigurationName(name(mode,project)));
-                config = setWC(wc,project,mode);
+                config = setWC(wc,project,mode,name);
             }
         } catch (CoreException e) {
             e.printStackTrace();
@@ -78,11 +78,12 @@ public class LaunchConfig {
     	}
     }
     
-    private static ILaunchConfiguration setWC(ILaunchConfigurationWorkingCopy wc, IProject project, String mode){
+    private static ILaunchConfiguration setWC(ILaunchConfigurationWorkingCopy wc, IProject project, String mode, String name){
     	ILaunchConfiguration config = null;
     	try {
     		wc.setAttribute(LAUNCH_CONFIG_KEY_MODE, mode);
             wc.setAttribute(LAUNCH_CONFIG_KEY_PROJECT_NAME, project.getName());
+            wc.setAttribute(LAUNCH_CONFIG_KEY_RUN_FILENAME,name);
 			wc.setAttribute(LAUNCH_CONFIG_KEY_WD,Property.get(project, PType.WORKINGDIR));
 			wc.setAttribute(LAUNCH_CONFIG_KEY_ARGS,Property.get(project, PType.CMDLINEARGS));
 	        config = wc.doSave();

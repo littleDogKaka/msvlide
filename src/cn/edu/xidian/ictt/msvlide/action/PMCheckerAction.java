@@ -75,9 +75,9 @@ public class PMCheckerAction implements IWorkbenchWindowActionDelegate{
 			
 			IProject project = file.getProject();
 			IFolder out = project.getFolder(MSetting.FOLDER_PMC);
-			IFile runFile = out.getFile(MSetting.PMC_RUNFILE_NAME);
+			IFile runFile = out.getFile(filename.substring(0, filename.length() -2));
 			if(runFile.isAccessible()){
-				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_PMC, project);
+				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_PMC, project,filename.substring(0, filename.length() -2));
 				try {
 					config.launch(LaunchConfig.LAUNCH_CONFIG_MODE_PMC, null, true);
 				} catch (CoreException e) {

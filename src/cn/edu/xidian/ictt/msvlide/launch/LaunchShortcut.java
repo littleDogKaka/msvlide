@@ -37,7 +37,7 @@ public abstract class LaunchShortcut implements ILaunchShortcut{
 						runStartFromFile(project,file,mode);
 					}else{
 						try {
-							ILaunchConfiguration config = LaunchConfig.find(mode, project);
+							ILaunchConfiguration config = LaunchConfig.find(mode, project,project.getName());
 							config.launch(mode, null, true);
 						} catch (CoreException e) {
 							e.printStackTrace();
@@ -65,6 +65,7 @@ public abstract class LaunchShortcut implements ILaunchShortcut{
 		private IProject project;
 		private String builderName;
 		private Map<String,String> map;
+		
 		public Build(IProject project,String builderName,Map<String,String> map){
 			this.project = project;
 			this.builderName = builderName;

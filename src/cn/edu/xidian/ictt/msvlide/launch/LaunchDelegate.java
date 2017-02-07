@@ -28,7 +28,8 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 		
 		String MODE = config.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_MODE, mode);
 		String NAME = config.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, "");
-		if(NAME.isEmpty()){
+		String RUNFILENAME = config.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_RUN_FILENAME, NAME);
+		if(RUNFILENAME.isEmpty()){
 			return;
 		}
 		
@@ -52,11 +53,11 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 
 		IFile exeFile = null;
 		if(MODE.equals(LaunchConfig.LAUNCH_CONFIG_MODE_UMC)){
-			exeFile = project.getFolder(MSetting.FOLDER_UMC).getFile(MSetting.UMC_RUNFILE_NAME);
+			exeFile = project.getFolder(MSetting.FOLDER_UMC).getFile(RUNFILENAME + MSetting.FILE_RUNNABLE_SUFFIX);
 		}else if(MODE.equals(LaunchConfig.LAUNCH_CONFIG_MODE_PMC)){
-			exeFile = project.getFolder(MSetting.FOLDER_PMC).getFile(MSetting.PMC_RUNFILE_NAME);
+			exeFile = project.getFolder(MSetting.FOLDER_PMC).getFile(RUNFILENAME + MSetting.FILE_RUNNABLE_SUFFIX);
 		}else {
-			exeFile = project.getFolder(MSetting.FOLDER_BIN).getFile(NAME + MSetting.FILE_RUNNABLE_SUFFIX);
+			exeFile = project.getFolder(MSetting.FOLDER_BIN).getFile(RUNFILENAME + MSetting.FILE_RUNNABLE_SUFFIX);
 		}
 		 
 		if(!exeFile.exists()){
@@ -81,19 +82,3 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 		DebugPlugin.newProcess(launch, p, NAME, processAttributes);
 	}
 }
-
-////org.eclipse.debug.ui.ATTR_CAPTURE_STDIN_FILE=${workspace_loc:/www/bin/main.m.bc} //input
-//String inputFilePath = config.getAttribute("org.eclipse.debug.ui.ATTR_CAPTURE_STDIN_FILE", "");
-//
-////org.eclipse.debug.ui.ATTR_CAPTURE_IN_FILE=${workspace_loc:/www/src/main.m}
-//String outputFilePath = config.getAttribute("org.eclipse.debug.ui.ATTR_CAPTURE_IN_FILE", "");
-//
-////org.eclipse.debug.ui.ATTR_APPEND_TO_FILE=true
-//boolean append = config.getAttribute("org.eclipse.debug.ui.ATTR_APPEND_TO_FILE", false);
-//
-//if(CommonTab.isLaunchInBackground(config)){
-//	//org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND=true
-//	
-//}else{
-//	
-//}

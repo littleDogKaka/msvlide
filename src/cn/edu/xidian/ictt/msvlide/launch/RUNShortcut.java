@@ -31,7 +31,7 @@ public class RUNShortcut extends LaunchShortcut {
 			ProgressMonitorDialog dialog = new ProgressMonitorDialog(Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
 			dialog.run(true, true, new Build(project,MSVLBuilder.BUILDER_ID,new HashMap<String,String>()));
 			// run
-			ILaunchConfiguration config = LaunchConfig.find(mode, project);
+			ILaunchConfiguration config = LaunchConfig.find(mode, project, project.getName());
 			config.launch(mode, null, false);
 		} catch (CoreException | InvocationTargetException | InterruptedException e) {
 			e.printStackTrace();

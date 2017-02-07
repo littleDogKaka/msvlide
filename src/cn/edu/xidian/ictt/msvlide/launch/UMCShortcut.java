@@ -35,7 +35,8 @@ public class UMCShortcut extends LaunchShortcut {
 			ProgressMonitorDialog dialog = new ProgressMonitorDialog(Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
 			dialog.run(true, true, new Build(project,UMCBuilder.BUILDER_ID,map));
 			
-			ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, project);
+			String name = file.getName().substring(0, file.getName().length() - 2);
+			ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, project, name);
 			config.launch(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, null, false);
 		} catch (CoreException | InvocationTargetException | InterruptedException e) {
 			e.printStackTrace();
