@@ -67,7 +67,7 @@ public class UMCBuilder extends IncrementalProjectBuilder{
 			MConsole.print("ERROR: " +  wd.getAbsolutePath() + ": don't exist or cannot read or write.",true);
 			return null;
 		}
-		String[] args = {MSetting.UMCHECKER, pfile.getRawLocation().toOSString(), mfile.getRawLocation().toOSString()};
+		String[] args = {MSetting.UMC_M_HECKER, pfile.getRawLocation().toOSString(), mfile.getRawLocation().toOSString()};
 		monitor.worked(5);
 		
 		try{

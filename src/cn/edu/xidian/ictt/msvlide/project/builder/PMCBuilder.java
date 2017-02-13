@@ -67,7 +67,7 @@ public class PMCBuilder extends IncrementalProjectBuilder{
 			MConsole.print("ERROR: " +  wd.getAbsolutePath() + ": don't exist or cannot read or write.",true);
 			return null;
 		}
-		String[] args = {MSetting.PMCHECKER, pfile.getRawLocation().toOSString(), mfile.getRawLocation().toOSString()};
+		String[] args = {MSetting.PMC_S_HECKER, pfile.getRawLocation().toOSString(), mfile.getRawLocation().toOSString()};
 		monitor.worked(5);
 		
 		try{

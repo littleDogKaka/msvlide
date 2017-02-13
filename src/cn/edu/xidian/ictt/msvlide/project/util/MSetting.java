@@ -37,8 +37,10 @@ public class MSetting {
 	public static final String CONVERT_VERILOG_TO_MSVL = "V2M";
 	public static final String CONVERT_VHDL_TO_MSVL = "VHDL2MSVL";
 	public static final String MSVL_COMPILER = "MC";
-	public static final String PMCHECKER = "PMC"; //PMC_MSV
-	public static final String UMCHECKER = "UMC"; //UMC_MSV
+	public static final String PMC_S_HECKER = "PMC_S";
+	public static final String PMC_M_HECKER = "PMC_M";
+	public static final String UMC_S_HECKER = "UMC_S";
+	public static final String UMC_M_HECKER = "UMC_M";
 	
 	public static final String BUILD_MAP_KEY_FILE_MAIN = "BUILD_MAP_KEY_FILE_MAIN";
 	public static final String BUILD_MAP_KEY_FILE_PROPERTY = "BUILD_MAP_KEY_FILE_PROPERTY";
