@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import cn.edu.xidian.ictt.msvlide.launch.LaunchConfig;
+import cn.edu.xidian.ictt.msvlide.launch.config.LaunchConfig;
 import cn.edu.xidian.ictt.msvlide.project.util.PType;
 import cn.edu.xidian.ictt.msvlide.project.util.Property;
 

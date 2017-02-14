@@ -61,14 +61,13 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 	
 	protected void fullBuild(final IProgressMonitor monitor,Map<String,String> map)throws CoreException {
 		try {
-			
+			String mode = map.get(MSetting.BUILD_MAP_KEY_MODE);
 			IProject project = getProject();
 			int count = project.getFolder(MSetting.FOLDER_SRC).getRawLocation().toFile().list().length;
 			monitor.beginTask("Compiling ", count * 5 + 5);
 			MConsole.clear();
-			project.accept(new MSVLResourceVisitor(monitor));
+			project.accept(new MSVLResourceVisitor(monitor, mode));
 			genExe(monitor);
-
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
@@ -79,38 +78,62 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 		genExe(monitor);
 	}
 	
-	private int compile(IFile file,IProgressMonitor monitor){
+	private int compile(IFile file, String mode, IProgressMonitor monitor){
 		monitor.setTaskName(file.getName());
 		int rtn = 0;
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 			
-			String[] cmd = new String[8];
-			cmd[0] = MSetting.MSVL_COMPILER;
-			try {
-				cmd[1] = "output=" + Property.get(getProject(), PType.ISOUTPUT);
-				cmd[2] = "maxstate=" + Property.get(getProject(), PType.MAXSTATUS);
-				cmd[3] = "gap=" + Property.get(getProject(), PType.INTERVAL);
-			} catch (CoreException e) {
-				cmd[1] = "output=false";
-				cmd[2] = "maxstate=1000000";
-				cmd[3] = "gap=1";
-			}
-			cmd[4] = "-c";
-			cmd[5] = file.getRawLocation().toString();
-			cmd[6] = "-o";
-			cmd[7] = file.getName() + ".bc";
+			String[] cmd = null;
 			
-			monitor.worked(1);
-			// delete xxx.*.bc before compile
-			try{
-				File oldBc = getProject().getFolder(MSetting.FOLDER_BIN).getFile(cmd[7]).getRawLocation().toFile();
-				if(oldBc.exists()){
-					oldBc.delete();
+			if(mode == null || MSetting.BUILD_MODE_RUN_S.equals(mode)){
+				cmd = new String[8];
+				cmd[0] = MSetting.MSVL_COMPILER;
+				try {
+					cmd[1] = "output=" + Property.get(getProject(), PType.ISOUTPUT);
+					cmd[2] = "maxstate=" + Property.get(getProject(), PType.MAXSTATUS);
+					cmd[3] = "gap=" + Property.get(getProject(), PType.INTERVAL);
+				} catch (CoreException e) {
+					cmd[1] = "output=false";
+					cmd[2] = "maxstate=1000000";
+					cmd[3] = "gap=1";
 				}
-				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-			}catch(Exception e){
-				e.printStackTrace();
+				cmd[4] = "-c";
+				cmd[5] = file.getRawLocation().toString();
+				cmd[6] = "-o";
+				cmd[7] = file.getName() + ".bc";
+				
+				monitor.worked(1);
+				// delete xxx.*.bc before compile
+				try{
+					File oldBc = getProject().getFolder(MSetting.FOLDER_BIN).getFile(cmd[7]).getRawLocation().toFile();
+					if(oldBc.exists()){
+						oldBc.delete();
+					}
+					ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}else if(MSetting.BUILD_MODE_RUN_M.equals(mode)){
+				cmd = new String[6];
+				cmd[0] = MSetting.MSVL_COMPILER;
+				cmd[1] = "-model";
+				cmd[2] = "-c";
+				cmd[3] = file.getRawLocation().toString();
+				cmd[4] = "-o";
+				cmd[5] = file.getName() + ".bc";
+				
+				monitor.worked(1);
+				// delete xxx.*.bc before compile
+				try{
+					File oldBc = getProject().getFolder(MSetting.FOLDER_BIN).getFile(cmd[5]).getRawLocation().toFile();
+					if(oldBc.exists()){
+						oldBc.delete();
+					}
+					ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
 			
 			monitor.worked(1);
@@ -239,9 +262,9 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 					
 					if(parentname.equals(MSetting.FOLDER_SRC)){
 						if(filename.endsWith(MSetting.FILE_MAIN_SUFFIX)){
-							compile(file,monitor);
+							compile(file,MSetting.BUILD_MODE_RUN_S,monitor);
 						}else if(filename.endsWith(MSetting.FILE_FUNC_SUFFIX)) {
-							compile(file,monitor);
+							compile(file,MSetting.BUILD_MODE_RUN_S,monitor);
 						}else if(filename.endsWith(MSetting.FILE_HEADER_SUFFIX)){
 							
 						}
@@ -270,7 +293,7 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 				if(resource instanceof IFile){
 					IFile file = (IFile)resource;
 					if(file.getParent().getName().equals(MSetting.FOLDER_SRC) && (file.getName().endsWith(MSetting.FILE_MAIN_SUFFIX) || file.getName().endsWith(MSetting.FILE_FUNC_SUFFIX))){
-						compile(file,monitor);
+						compile(file,MSetting.BUILD_MODE_RUN_S,monitor);
 					}
 				}
 				break;
@@ -282,9 +305,11 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 	// full build will execute visit on every file in project(even .project file)
 	class MSVLResourceVisitor implements IResourceVisitor {
 		private IProgressMonitor monitor;
+		private String mode;
 		
-		public MSVLResourceVisitor(IProgressMonitor monitor){
+		public MSVLResourceVisitor(IProgressMonitor monitor,String mode){
 			this.monitor = monitor;
+			this.mode = mode;
 		}
 		
 		public boolean visit(IResource resource) {
@@ -293,7 +318,7 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 				if(file.getParent().getName().equals(MSetting.FOLDER_SRC) ){
 					String filename = file.getName();
 					if(filename.endsWith(MSetting.FILE_MAIN_SUFFIX) || filename.endsWith(MSetting.FILE_FUNC_SUFFIX)){
-						compile(file,monitor);
+						compile(file,mode,monitor);
 					}
 				}
 			}

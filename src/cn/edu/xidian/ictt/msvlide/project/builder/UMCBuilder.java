@@ -41,13 +41,7 @@ public class UMCBuilder extends IncrementalProjectBuilder{
 		if(map == null || map.isEmpty()){
 			return null;
 		}
-		
-		String mode = map.get(MSetting.BUILD_MAP_KEY_MODE);
-		
-		if(!MSetting.BUILD_MODE_UMC.equals(mode)){
-			return null;
-		}
-		
+
 		String pFilename = map.get(MSetting.BUILD_MAP_KEY_FILE_PROPERTY);
 		if(pFilename == null || pFilename.isEmpty()){
 			return null;
@@ -67,7 +61,18 @@ public class UMCBuilder extends IncrementalProjectBuilder{
 			MConsole.print("ERROR: " +  wd.getAbsolutePath() + ": don't exist or cannot read or write.",true);
 			return null;
 		}
-		String[] args = {MSetting.UMC_M_HECKER, pfile.getRawLocation().toOSString(), mfile.getRawLocation().toOSString()};
+		String[] args = {"", pfile.getRawLocation().toOSString(), mfile.getRawLocation().toOSString()};
+		
+		String mode = map.get(MSetting.BUILD_MAP_KEY_MODE);
+		if(mode == null || MSetting.BUILD_MODE_UMC_S.equals(mode)){
+			args[0] = MSetting.UMC_S;
+		}else if(MSetting.BUILD_MODE_UMC_M.equals(mode)){
+			args[0] = MSetting.UMC_M;
+		}else{
+			MConsole.print("ERROR: mode error: mode must be UMC_M or UMC_S ",true);
+			return null;
+		}
+		
 		monitor.worked(5);
 		
 		try{

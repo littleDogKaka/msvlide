@@ -35,7 +35,7 @@
 		name="%MSVL.Project.Nature"
 		point="org.eclipse.core.resources.natures">
 		<runtime>
-			<run class="cn.edu.xidian.ictt.msvlide.project.builder.MSVLNature"></run>
+			<run class="cn.edu.xidian.ictt.msvlide.project.nature.MSVLNature"></run>
 		</runtime>
 		<builder
 			id="cn.edu.xidian.ictt.msvlide.MSVLBuilder">
@@ -178,7 +178,7 @@
 				tooltip="%MSVL.ActionSet.Convert.C.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
-				class="cn.edu.xidian.ictt.msvlide.action.C2MSVLAction">
+				class="cn.edu.xidian.ictt.msvlide.action.convert.C2MSVLAction">
 			</action>
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.verilog2msvl"
@@ -187,7 +187,7 @@
 				tooltip="%MSVL.ActionSet.Convert.Verilog.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
-				class="cn.edu.xidian.ictt.msvlide.action.Verilog2MSVLAction">
+				class="cn.edu.xidian.ictt.msvlide.action.convert.Verilog2MSVLAction">
 			</action>
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.hdl2msvl"
@@ -196,11 +196,11 @@
 				tooltip="%MSVL.ActionSet.Convert.VHDL.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
-				class="cn.edu.xidian.ictt.msvlide.action.VHDL2MSVLAction">
+				class="cn.edu.xidian.ictt.msvlide.action.convert.VHDL2MSVLAction">
 			</action>
 		</actionSet>
 		
-		<!-- checker -->
+		<!-- MSVL Builder  -->
 		<actionSet
 			label="%MSVL.ActionSet.Build"
 			visible="true"
@@ -208,7 +208,7 @@
 			<menu
 				label="%MSVL"
 				path="additions"
-				id="cn.edu.xidian.ictt.msvlide.actionsets.menu">
+				id="cn.edu.xidian.ictt.msvlide.actionsets.build.menu">
 				<separator
 					name="content">
 				</separator>
@@ -217,24 +217,35 @@
 				</separator>
 			</menu>
 			<action
-				id="cn.edu.xidian.ictt.msvlide.actionsets.build.action"
-				label="%MSVL.Build"
+				id="cn.edu.xidian.ictt.msvlide.actionsets.build.s"
+				label="%MSVL.Build.S"
 				icon="icons/build_16.ico"
-				tooltip="%MSVL.Build.Tooltip"
-				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.menu/content"
+				tooltip="%MSVL.Build.Tooltip.S"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.build.menu/content"
 				toolbarPath="Normal/additions"
-				class="cn.edu.xidian.ictt.msvlide.action.BuildAction">
+				class="cn.edu.xidian.ictt.msvlide.action.build.BuildSAction">
 			</action>
+			<action
+				id="cn.edu.xidian.ictt.msvlide.actionsets.build.m"
+				label="%MSVL.Build.M"
+				icon="icons/build_16.ico"
+				tooltip="%MSVL.Build.Tooltip.M"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.build.menu/content"
+				toolbarPath="Normal/additions"
+				class="cn.edu.xidian.ictt.msvlide.action.build.BuildMAction">
+			</action>
+			
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.clean.action"
 				label="%MSVL.Clean"
 				icon="icons/clean_16.ico"
 				tooltip="%MSVL.Clean.Tooltip"
-				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.menu/content"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.build.menu/content"
 				toolbarPath="Normal/additions"
-				class="cn.edu.xidian.ictt.msvlide.action.CleanAction">
+				class="cn.edu.xidian.ictt.msvlide.action.build.CleanAction">
 			</action>
 		</actionSet>
+		
 		<!-- Model Checker -->
 		<actionSet
 			label="%MSVL.ActionSet.ModelChecker"
@@ -251,23 +262,47 @@
 					name="additions">
 				</separator>
 			</menu>
+			
+			<!-- PMC based Simulation -->
 			<action
-				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.pmc"
-				label="%MSVL.ActionSet.ModelChecker.PMC"
+				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.pmc.simulation"
+				label="%MSVL.ActionSet.ModelChecker.PMC.S"
 				icon="icons/copy_16.ico"
-				tooltip="%MSVL.ActionSet.ModelChecker.PMC.Tooltip"
+				tooltip="%MSVL.ActionSet.ModelChecker.PMC.S.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.checker.menu/content"
 				toolbarPath="Normal/additions"
-				class="cn.edu.xidian.ictt.msvlide.action.PMCheckerAction">
+				class="cn.edu.xidian.ictt.msvlide.action.build.PMCSAction">
 			</action>
+			<!-- PMC based Model -->
 			<action
-				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.umc"
-				label="%MSVL.ActionSet.ModelChecker.UMC"
+				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.pmc.modeling"
+				label="%MSVL.ActionSet.ModelChecker.PMC.M"
 				icon="icons/copy_16.ico"
-				tooltip="%MSVL.ActionSet.ModelChecker.UMC.Tooltip"
+				tooltip="%MSVL.ActionSet.ModelChecker.PMC.M.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.checker.menu/content"
 				toolbarPath="Normal/additions"
-				class="cn.edu.xidian.ictt.msvlide.action.UMCheckerAction">
+				class="cn.edu.xidian.ictt.msvlide.action.build.PMCMAction">
+			</action>
+			
+			<!-- UMC based Simulation -->
+			<action
+				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.umc.simulation"
+				label="%MSVL.ActionSet.ModelChecker.UMC.S"
+				icon="icons/copy_16.ico"
+				tooltip="%MSVL.ActionSet.ModelChecker.UMC.S.Tooltip"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.checker.menu/content"
+				toolbarPath="Normal/additions"
+				class="cn.edu.xidian.ictt.msvlide.action.build.UMCSAction">
+			</action>
+			<!-- PMC based Model -->
+			<action
+				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.umc.modeling"
+				label="%MSVL.ActionSet.ModelChecker.UMC.M"
+				icon="icons/copy_16.ico"
+				tooltip="%MSVL.ActionSet.ModelChecker.UMC.M.Tooltip"
+				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.checker.menu/content"
+				toolbarPath="Normal/additions"
+				class="cn.edu.xidian.ictt.msvlide.action.build.UMCMAction">
 			</action>
 		</actionSet>
 	</extension>
@@ -287,12 +322,13 @@
 	<!-- launch start -->
 	<extension
 		point="org.eclipse.debug.ui.launchShortcuts">
+		<!-- RUN Shortcut -->
 		<shortcut
-			class= "cn.edu.xidian.ictt.msvlide.launch.RUNShortcut"
+			class= "cn.edu.xidian.ictt.msvlide.launch.shortcut.RUNSShortcut"
 			icon= "icons/console_16.ico"
-			id= "cn.edu.xidian.ictt.msvlide.launch.launchshortcut"
-			label= "%MSVL.LaunchShortcut.Name"
-			modes= "run, debug" >
+			id= "cn.edu.xidian.ictt.msvlide.launch.launchshortcut.simulation"
+			label= "%MSVL.LaunchShortcut.Name.Simulation"
+			modes= "run" >
 			<contextualLaunch>
 				<enablement>
 					<with variable= "selection">
@@ -304,8 +340,31 @@
 								<adapt type="org.eclipse.core.resources.IProject">
 									<test property="org.eclipse.core.resources.projectNature" value="cn.edu.xidian.ictt.msvlide.MSVLNature"/>
 								</adapt>
-								<adapt type="org.eclipse.core.resources.IFolder">
-									<test property="org.eclipse.debug.ui.matchesPattern" value="bin"/>
+								<adapt type="org.eclipse.core.resources.IFile">
+									<test property="org.eclipse.debug.ui.matchesPattern" value="[\s|\S]+.m$"/>
+								</adapt>
+							</or>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+		</shortcut>
+		<shortcut
+			class= "cn.edu.xidian.ictt.msvlide.launch.shortcut.RUNMShortcut"
+			icon= "icons/console_16.ico"
+			id= "cn.edu.xidian.ictt.msvlide.launch.launchshortcut.modeling"
+			label= "%MSVL.LaunchShortcut.Name.Modeling"
+			modes= "run" >
+			<contextualLaunch>
+				<enablement>
+					<with variable= "selection">
+						<count
+							value= "1">
+						</count>
+						<iterate>
+							<or>
+								<adapt type="org.eclipse.core.resources.IProject">
+									<test property="org.eclipse.core.resources.projectNature" value="cn.edu.xidian.ictt.msvlide.MSVLNature"/>
 								</adapt>
 								<adapt type="org.eclipse.core.resources.IFile">
 									<test property="org.eclipse.debug.ui.matchesPattern" value="[\s|\S]+.m$"/>
@@ -317,50 +376,100 @@
 			</contextualLaunch>
 		</shortcut>
 		
+		<!-- PMC Shortcut -->
 		<shortcut
-			class= "cn.edu.xidian.ictt.msvlide.launch.PMCShortcut"
+			class= "cn.edu.xidian.ictt.msvlide.launch.shortcut.PMCSShortcut"
 			icon= "icons/console_16.ico"
-			id= "cn.edu.xidian.ictt.msvlide.launch.modelcheckershortcut"
-			label= "%MSVL.ParallelModelChecker.Shortcut.Name"
+			id= "cn.edu.xidian.ictt.msvlide.launch.pmcshortcut.simulation"
+			label= "%MSVL.ParallelModelChecker.Shortcut.Name.Simulation"
 			modes= "run" >
 			<contextualLaunch>
 				<enablement>
 					<with variable= "selection">
 						<count value= "1"></count>
 						<iterate>
-							<or>
-								<adapt type="org.eclipse.core.resources.IFolder">
+							<!--<or>-->
+								<!--<adapt type="org.eclipse.core.resources.IFolder">
 									<test property="org.eclipse.debug.ui.matchesPattern" value="pmc"/>
-								</adapt>
+								</adapt>-->
 								<adapt type="org.eclipse.core.resources.IFile">
 									<test property="org.eclipse.debug.ui.matchesPattern" value="[\s|\S]+.p$"/>
 								</adapt>
-							</or>
+							<!--</or>-->
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+		</shortcut>
+		<shortcut
+			class= "cn.edu.xidian.ictt.msvlide.launch.shortcut.PMCMShortcut"
+			icon= "icons/console_16.ico"
+			id= "cn.edu.xidian.ictt.msvlide.launch.pmcshortcut.modeling"
+			label= "%MSVL.ParallelModelChecker.Shortcut.Name.Modeling"
+			modes= "run" >
+			<contextualLaunch>
+				<enablement>
+					<with variable= "selection">
+						<count value= "1"></count>
+						<iterate>
+							<!--<or>-->
+								<!--<adapt type="org.eclipse.core.resources.IFolder">
+									<test property="org.eclipse.debug.ui.matchesPattern" value="pmc"/>
+								</adapt>-->
+								<adapt type="org.eclipse.core.resources.IFile">
+									<test property="org.eclipse.debug.ui.matchesPattern" value="[\s|\S]+.p$"/>
+								</adapt>
+							<!--</or>-->
 						</iterate>
 					</with>
 				</enablement>
 			</contextualLaunch>
 		</shortcut>
 		
+		<!-- UMC Shortcut -->
 		<shortcut
-			class= "cn.edu.xidian.ictt.msvlide.launch.UMCShortcut"
+			class= "cn.edu.xidian.ictt.msvlide.launch.shortcut.UMCSShortcut"
 			icon= "icons/console_16.ico"
-			id= "cn.edu.xidian.ictt.msvlide.launch.modelcheckershortcut"
-			label= "%MSVL.UnifiedModelChecker.Shortcut.Name"
+			id= "cn.edu.xidian.ictt.msvlide.launch.umcshortcut.simulation"
+			label= "%MSVL.UnifiedModelChecker.Shortcut.Name.Simulation"
 			modes= "run" >
 			<contextualLaunch>
 				<enablement>
 					<with variable= "selection">
 						<count value= "1"></count>
 						<iterate>
-							<or>
+							<!--<or>
 								<adapt type="org.eclipse.core.resources.IFolder">
 									<test property="org.eclipse.debug.ui.matchesPattern" value="umc"/>
-								</adapt>
+								</adapt>-->
 								<adapt type="org.eclipse.core.resources.IFile">
 									<test property="org.eclipse.debug.ui.matchesPattern" value="[\s|\S]+.p$"/>
 								</adapt>
-							</or>
+							<!--</or>-->
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+		</shortcut>
+		<shortcut
+			class= "cn.edu.xidian.ictt.msvlide.launch.shortcut.UMCMShortcut"
+			icon= "icons/console_16.ico"
+			id= "cn.edu.xidian.ictt.msvlide.launch.umcshortcut.modeling"
+			label= "%MSVL.UnifiedModelChecker.Shortcut.Name.Modeling"
+			modes= "run" >
+			<contextualLaunch>
+				<enablement>
+					<with variable= "selection">
+						<count value= "1"></count>
+						<iterate>
+							<!--<or>
+								<adapt type="org.eclipse.core.resources.IFolder">
+									<test property="org.eclipse.debug.ui.matchesPattern" value="umc"/>
+								</adapt>-->
+								<adapt type="org.eclipse.core.resources.IFile">
+									<test property="org.eclipse.debug.ui.matchesPattern" value="[\s|\S]+.p$"/>
+								</adapt>
+							<!--</or>-->
 						</iterate>
 					</with>
 				</enablement>
@@ -379,11 +488,6 @@
 				perspective="cn.edu.xidian.ictt.msvlide.perspective"
 				description="%MSVL.LaunchConfigurationTabGroups.Run.Description">
             </launchMode>
-            <launchMode 
-				mode="debug"
-				perspective="cn.edu.xidian.ictt.msvlide.perspective"
-				description="%MSVL.LaunchConfigurationTabGroups.Debug.Description">
-            </launchMode>
 		</launchConfigurationTabGroup>
 	</extension>
 	
@@ -400,8 +504,8 @@
 		point="org.eclipse.debug.core.launchConfigurationTypes">
 		<launchConfigurationType
 			id= "cn.edu.xidian.ictt.msvlide.launch.ConfigurationType"
-			delegate= "cn.edu.xidian.ictt.msvlide.launch.LaunchDelegate"
-			modes= "run, debug, pmc, umc"
+			delegate= "cn.edu.xidian.ictt.msvlide.launch.config.LaunchDelegate"
+			modes= "run,pmc,umc"
 			name= "%MSVL.LaunchConfig.Name"
 			delegateName="%MSVL.LaunchConfig.Delegate.Name"
 			delegateDescription="%MSVL.LaunchConfig.Delegate.Description">

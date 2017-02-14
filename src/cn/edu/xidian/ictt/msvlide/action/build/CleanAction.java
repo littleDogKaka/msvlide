@@ -1,4 +1,4 @@
-package cn.edu.xidian.ictt.msvlide.action;
+package cn.edu.xidian.ictt.msvlide.action.build;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -31,6 +31,11 @@ public class CleanAction implements IWorkbenchWindowActionDelegate{
 	}
 	
 	@Override
+	public void selectionChanged(IAction action, ISelection selection) {
+		project = MProject.get(selection);
+	}
+	
+	@Override
 	public void run(IAction action) {
 		if(window == null){
 			return;
@@ -51,14 +56,7 @@ public class CleanAction implements IWorkbenchWindowActionDelegate{
 	}
 
 	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
-		project = MProject.get(selection);
-	}
-
-	@Override
-	public void dispose() {
-		
-	}
+	public void dispose() {}
 	
 	class Clean implements IRunnableWithProgress{
 

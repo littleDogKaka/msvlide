@@ -1,13 +1,12 @@
-package cn.edu.xidian.ictt.msvlide.action;
+package cn.edu.xidian.ictt.msvlide.action.build;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -15,36 +14,19 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import cn.edu.xidian.ictt.msvlide.project.builder.MSVLBuilder;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
+import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
-public class BuildAction implements IWorkbenchWindowActionDelegate{
+public abstract class BuildAction implements IWorkbenchWindowActionDelegate{
 
-	private IWorkbenchWindow window;
-	private IProject project = null;
+	protected IWorkbenchWindow window;
+	protected IProject project = null;
 	
 	@Override
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}
 	
-	@Override
-	public void run(IAction action) {
-		if(window == null){
-			return;
-		}
-
-		if(project == null){
-			String[] btns = {"OK"};
-			MessageDialog dialog = new MessageDialog(window.getShell(),"MSVL Project", null,"Please choose a MSVL project!", MessageDialog.WARNING,btns,0); 
-			dialog.open();
-			return;
-		}
-		try {
-			ProgressMonitorDialog dialog = new ProgressMonitorDialog(window.getShell());
-			dialog.run(true, true, new Build(project));
-		} catch ( InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -58,14 +40,19 @@ public class BuildAction implements IWorkbenchWindowActionDelegate{
 
 	class Build implements IRunnableWithProgress{
 		private IProject project;
-		public Build(IProject project){
+		private String mode;
+		
+		public Build(IProject project, String mode){
 			this.project = project;
+			this.mode = mode;
 		}
 		
 		@Override
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException{
 			try {
-				project.build(MSVLBuilder.FULL_BUILD, monitor);//MSVLBuilder.BUILDER_ID, null,
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put(MSetting.BUILD_MAP_KEY_MODE, mode);
+				project.build(MSVLBuilder.FULL_BUILD, MSVLBuilder.BUILDER_ID, map, monitor);
 			} catch (CoreException e) {
 				e.printStackTrace();
 			}

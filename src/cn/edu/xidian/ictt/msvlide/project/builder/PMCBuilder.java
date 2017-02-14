@@ -42,12 +42,6 @@ public class PMCBuilder extends IncrementalProjectBuilder{
 			return null;
 		}
 		
-		String mode = map.get(MSetting.BUILD_MAP_KEY_MODE);
-		
-		if(!MSetting.BUILD_MODE_PMC.equals(mode)){
-			return null;
-		}
-		
 		String pFilename = map.get(MSetting.BUILD_MAP_KEY_FILE_PROPERTY);
 		if(pFilename == null || pFilename.isEmpty()){
 			return null;
@@ -67,7 +61,18 @@ public class PMCBuilder extends IncrementalProjectBuilder{
 			MConsole.print("ERROR: " +  wd.getAbsolutePath() + ": don't exist or cannot read or write.",true);
 			return null;
 		}
-		String[] args = {MSetting.PMC_S_HECKER, pfile.getRawLocation().toOSString(), mfile.getRawLocation().toOSString()};
+		
+		String[] args = {"", pfile.getRawLocation().toOSString(), mfile.getRawLocation().toOSString()};
+		String mode = map.get(MSetting.BUILD_MAP_KEY_MODE);
+		if(mode == null || MSetting.BUILD_MODE_PMC_S.equals(mode)){
+			args[0] = MSetting.PMC_S;
+		}else if(MSetting.BUILD_MODE_PMC_M.equals(mode)){
+			args[0] = MSetting.PMC_M;
+		}else{
+			MConsole.print("ERROR: mode error: mode must be PMC_M or PMC_S ",true);
+			return null;
+		}
+		
 		monitor.worked(5);
 		
 		try{

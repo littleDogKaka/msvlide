@@ -1,10 +1,12 @@
-package cn.edu.xidian.ictt.msvlide.project.builder;
+package cn.edu.xidian.ictt.msvlide.project.nature;
 
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
+
+import cn.edu.xidian.ictt.msvlide.project.builder.MSVLBuilder;
 
 public class MSVLNature implements IProjectNature {
 
@@ -48,8 +50,7 @@ public class MSVLNature implements IProjectNature {
 			if (commands[i].getBuilderName().equals(MSVLBuilder.BUILDER_ID)) {
 				ICommand[] newCommands = new ICommand[commands.length - 1];
 				System.arraycopy(commands, 0, newCommands, 0, i);
-				System.arraycopy(commands, i + 1, newCommands, i,
-						commands.length - i - 1);
+				System.arraycopy(commands, i + 1, newCommands, i, commands.length - i - 1);
 				description.setBuildSpec(newCommands);
 				project.setDescription(description, null);
 				return;

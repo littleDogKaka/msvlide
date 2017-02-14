@@ -1,4 +1,4 @@
-package cn.edu.xidian.ictt.msvlide.launch;
+package cn.edu.xidian.ictt.msvlide.launch.config;
 
 import java.io.File;
 import java.util.HashMap;
@@ -80,5 +80,6 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 		launch.setAttribute(IProcess.ATTR_CMDLINE , cmd);
 		Process p = DebugPlugin.exec(cmd.split(DELIMITER), wd);
 		DebugPlugin.newProcess(launch, p, NAME, processAttributes);
+		
 	}
 }

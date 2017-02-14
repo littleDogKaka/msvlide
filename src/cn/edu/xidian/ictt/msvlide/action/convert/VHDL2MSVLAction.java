@@ -1,4 +1,4 @@
-package cn.edu.xidian.ictt.msvlide.action;
+package cn.edu.xidian.ictt.msvlide.action.convert;
 
 import java.io.File;
 
@@ -16,7 +16,7 @@ import cn.edu.xidian.ictt.msvlide.console.DisplayOutput;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
-public class Verilog2MSVLAction implements IWorkbenchWindowActionDelegate{
+public class VHDL2MSVLAction implements IWorkbenchWindowActionDelegate{
 
 	private IWorkbenchWindow window;
 	private IFile file;
@@ -35,20 +35,19 @@ public class Verilog2MSVLAction implements IWorkbenchWindowActionDelegate{
 			showDialog();
 			return;
 		}
-		
 		String filename = file.getName();
-		if(!filename.endsWith(MSetting.FILE_VERILOG_SUFFIX)){
+		if(!filename.endsWith(MSetting.FILE_VHDL_SUFFIX)){
 			showDialog();
 			return;
 		}
 		
 		String input = file.getRawLocation().toString().replace("/", "\\");
-		File wd = file.getProject().getFolder(MSetting.FOLDER_SRC).getRawLocation().toFile();
-		String[] args = {MSetting.CONVERT_VERILOG_TO_MSVL, input, filename + MSetting.FILE_MAIN_SUFFIX};
+		File wd = file.getProject().getFolder("src").getRawLocation().toFile();
+		String[] args = {MSetting.CONVERT_VHDL_TO_MSVL, input, wd.getAbsolutePath() + "\\" + file.getName() + MSetting.FILE_MAIN_SUFFIX};
 		try {
 			Process p = Runtime.getRuntime().exec(args, null, wd);
-			new Thread(new DisplayOutput(p.getInputStream(), "Verilog2MSVL")).start();
-			new Thread(new DisplayOutput(p.getErrorStream(), "Verilog2MSVL")).start();
+			new Thread(new DisplayOutput(p.getInputStream(), "VHDL2MSVL")).start();
+			new Thread(new DisplayOutput(p.getErrorStream(), "VHDL2MSVL")).start();
 			p.waitFor();
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Exception e) {
@@ -74,11 +73,10 @@ public class Verilog2MSVLAction implements IWorkbenchWindowActionDelegate{
 
 	@Override
 	public void dispose() {}
-	
+
 	private void showDialog(){
 		String[] btns = {"OK"};
-		MessageDialog dialog = new MessageDialog(window.getShell(),"Verilog to MSVL", null,"Please select a Verilog source file in directory " + MSetting.FOLDER_SRC_VHDL, MessageDialog.WARNING,btns,0); 
+		MessageDialog dialog = new MessageDialog(window.getShell(),"MSVL Project", null,"Please choose a VHDL source file in directory " + MSetting.FOLDER_SRC_VHDL, MessageDialog.WARNING,btns,0); 
 		dialog.open();
-		return;
 	}
 }

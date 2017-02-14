@@ -1,4 +1,4 @@
-package cn.edu.xidian.ictt.msvlide.launch;
+package cn.edu.xidian.ictt.msvlide.launch.config;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;

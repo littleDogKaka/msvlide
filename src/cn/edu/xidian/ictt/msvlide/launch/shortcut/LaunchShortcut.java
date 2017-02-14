@@ -1,14 +1,15 @@
-package cn.edu.xidian.ictt.msvlide.launch;
+package cn.edu.xidian.ictt.msvlide.launch.shortcut;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -35,17 +36,22 @@ public abstract class LaunchShortcut implements ILaunchShortcut{
 					if(obj instanceof IFile){
 						IFile file = (IFile)obj;
 						runStartFromFile(project,file,mode);
+					} else if(obj instanceof IFolder){
+						IFolder folder = (IFolder)obj;
+						runStartFromFolder(project, folder, mode);
 					}else{
-						try {
-							ILaunchConfiguration config = LaunchConfig.find(mode, project,project.getName());
-							config.launch(mode, null, true);
-						} catch (CoreException e) {
-							e.printStackTrace();
-						}
+						runStartFromProject(project, mode);
 					}
 				}
 			}
 		}
+		try {
+			Thread.sleep(500);
+			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (InterruptedException | CoreException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Override
@@ -60,6 +66,8 @@ public abstract class LaunchShortcut implements ILaunchShortcut{
 	}
 	
 	protected abstract void runStartFromFile(IProject project,IFile file,String mode);
+	protected abstract void runStartFromFolder(IProject project,IFolder folder,String mode);
+	protected abstract void runStartFromProject(IProject project,String mode);
 	
 	class Build implements IRunnableWithProgress{
 		private IProject project;

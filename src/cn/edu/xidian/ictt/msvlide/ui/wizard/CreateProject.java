@@ -15,7 +15,7 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 import cn.edu.xidian.ictt.msvlide.Activator;
-import cn.edu.xidian.ictt.msvlide.project.builder.MSVLNature;
+import cn.edu.xidian.ictt.msvlide.project.nature.MSVLNature;
 import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 import cn.edu.xidian.ictt.msvlide.project.util.Property;
 

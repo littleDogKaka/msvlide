@@ -16,8 +16,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import cn.edu.xidian.ictt.msvlide.Activator;
-import cn.edu.xidian.ictt.msvlide.project.builder.MSVLNature;
-//import cn.edu.xidian.ictt.msvlide.project.builder.MSVLNature;
+import cn.edu.xidian.ictt.msvlide.project.nature.MSVLNature;
 
 
 public class MProject {
