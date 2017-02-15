@@ -6,6 +6,8 @@ import java.util.HashMap;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -40,6 +42,9 @@ public class UMCSShortcut extends LaunchShortcut {
 			String name = file.getName().substring(0, file.getName().length() - 2);
 			ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, project, name);
 			config.launch(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, null, false);
+			
+			Thread.sleep(500);
+			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException | InvocationTargetException | InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -7,7 +7,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.ui.ILaunchShortcut;
@@ -45,13 +44,6 @@ public abstract class LaunchShortcut implements ILaunchShortcut{
 				}
 			}
 		}
-		try {
-			Thread.sleep(500);
-			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (InterruptedException | CoreException e) {
-			e.printStackTrace();
-		}
-		
 	}
 
 	@Override
