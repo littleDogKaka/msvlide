@@ -79,7 +79,7 @@
 		</category>
 		<wizard
             name="%MSVL.Project"
-            icon="icons/sample.gif"
+            icon="icons/m.png"
             category="cn.edu.xidian.ictt.msvlide.newwizards.category"
             class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateProject"
             preferredPerspectives="cn.edu.xidian.ictt.msvlide.perspective"
@@ -90,7 +90,7 @@
 		</wizard>
 		<wizard
 			name="%MSVL.File.New.Main"
-            icon="icons/sample.gif"
+            icon="icons/file_m_16.png"
             category="cn.edu.xidian.ictt.msvlide.newwizards.category"
             class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateMainFile"
             id="cn.edu.xidian.ictt.msvlide.newwizards.CreateMainFile">
@@ -98,7 +98,7 @@
 		</wizard>
 		<wizard
 			name="%MSVL.File.New.Function"
-            icon="icons/sample.gif"
+            icon="icons/file_f_16.png"
             category="cn.edu.xidian.ictt.msvlide.newwizards.category"
             class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateFuncFile"
             id="cn.edu.xidian.ictt.msvlide.newwizards.CreateFuncFile">
@@ -106,7 +106,7 @@
 		</wizard>
 		<wizard
 			name="%MSVL.File.New.Header"
-            icon="icons/sample.gif"
+            icon="icons/file_h_16.png"
             category="cn.edu.xidian.ictt.msvlide.newwizards.category"
             class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateHeaderFile"
             id="cn.edu.xidian.ictt.msvlide.newwizards.CreateHeaderFile">
@@ -114,7 +114,7 @@
 		</wizard>
 		<wizard
 			name="%MSVL.File.New.Property"
-            icon="icons/sample.gif"
+            icon="icons/file_p_16.png"
             category="cn.edu.xidian.ictt.msvlide.newwizards.category"
             class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreatePropertyFile"
             id="cn.edu.xidian.ictt.msvlide.newwizards.CreatePropertyFile">
@@ -174,7 +174,7 @@
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.c2msvl"
 				label="%MSVL.ActionSet.Convert.C"
-				icon="icons/copy_16.ico"
+				icon="icons/c2m_16.png"
 				tooltip="%MSVL.ActionSet.Convert.C.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
@@ -183,7 +183,7 @@
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.verilog2msvl"
 				label="%MSVL.ActionSet.Convert.Verilog"
-				icon="icons/copy_16.ico"
+				icon="icons/verilog2m_16.png"
 				tooltip="%MSVL.ActionSet.Convert.Verilog.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
@@ -192,7 +192,7 @@
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.convert.hdl2msvl"
 				label="%MSVL.ActionSet.Convert.VHDL"
-				icon="icons/copy_16.ico"
+				icon="icons/vhdl2m_16.png"
 				tooltip="%MSVL.ActionSet.Convert.VHDL.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.convert.menu/content"
 				toolbarPath="Normal/additions"
@@ -219,7 +219,7 @@
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.build.s"
 				label="%MSVL.Build.S"
-				icon="icons/build_16.ico"
+				icon="icons/r_s_16_2.png"
 				tooltip="%MSVL.Build.Tooltip.S"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.build.menu/content"
 				toolbarPath="Normal/additions"
@@ -228,7 +228,7 @@
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.build.m"
 				label="%MSVL.Build.M"
-				icon="icons/build_16.ico"
+				icon="icons/r_m_16_2.png"
 				tooltip="%MSVL.Build.Tooltip.M"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.build.menu/content"
 				toolbarPath="Normal/additions"
@@ -267,7 +267,7 @@
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.pmc.simulation"
 				label="%MSVL.ActionSet.ModelChecker.PMC.S"
-				icon="icons/copy_16.ico"
+				icon="icons/p_s_16_2.png"
 				tooltip="%MSVL.ActionSet.ModelChecker.PMC.S.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.checker.menu/content"
 				toolbarPath="Normal/additions"
@@ -277,7 +277,7 @@
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.pmc.modeling"
 				label="%MSVL.ActionSet.ModelChecker.PMC.M"
-				icon="icons/copy_16.ico"
+				icon="icons/p_m_16_2.png"
 				tooltip="%MSVL.ActionSet.ModelChecker.PMC.M.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.checker.menu/content"
 				toolbarPath="Normal/additions"
@@ -288,7 +288,7 @@
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.umc.simulation"
 				label="%MSVL.ActionSet.ModelChecker.UMC.S"
-				icon="icons/copy_16.ico"
+				icon="icons/u_s_16_2.png"
 				tooltip="%MSVL.ActionSet.ModelChecker.UMC.S.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.checker.menu/content"
 				toolbarPath="Normal/additions"
@@ -298,7 +298,7 @@
 			<action
 				id="cn.edu.xidian.ictt.msvlide.actionsets.checker.umc.modeling"
 				label="%MSVL.ActionSet.ModelChecker.UMC.M"
-				icon="icons/copy_16.ico"
+				icon="icons/u_m_16_2.png"
 				tooltip="%MSVL.ActionSet.ModelChecker.UMC.M.Tooltip"
 				menubarPath="cn.edu.xidian.ictt.msvlide.actionsets.checker.menu/content"
 				toolbarPath="Normal/additions"
@@ -313,7 +313,7 @@
 		<perspective
 			id="cn.edu.xidian.ictt.msvlide.perspective"
 			name="MSVL"
-			icon="icons/sample.gif"
+			icon="icons/m.png"
 			class="cn.edu.xidian.ictt.msvlide.perspective.Factory">
 			<description>%MSVL.Perspective.Description</description>
 		</perspective>
