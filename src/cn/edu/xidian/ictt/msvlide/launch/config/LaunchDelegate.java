@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -16,7 +15,8 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 
 import cn.edu.xidian.ictt.msvlide.console.MConsole;
-import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
+import cn.edu.xidian.ictt.msvlide.project.util.PType;
+import cn.edu.xidian.ictt.msvlide.project.util.Property;
 
 
 public class LaunchDelegate extends LaunchConfigurationDelegate{
@@ -41,7 +41,8 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 		File wd = null;
 		String WDIR = config.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_WD, "");
 		if(WDIR.isEmpty()){
-			wd = project.getRawLocation().toFile();
+			String path = project.getLocation().toOSString();
+			wd = new File(path);
 		}else{
 			wd = new File(WDIR);
 		}
@@ -50,29 +51,19 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 			MConsole.print("ERROR: " +  wd.getAbsolutePath() + ": don't exist or cannot read or write.",true);
 			return;
 		}
-
-		IFile exeFile = null;
-		if(MODE.equals(LaunchConfig.LAUNCH_CONFIG_MODE_UMC)){
-			exeFile = project.getFolder(MSetting.FOLDER_UMC).getFile(RUNFILENAME + MSetting.FILE_RUNNABLE_SUFFIX);
-		}else if(MODE.equals(LaunchConfig.LAUNCH_CONFIG_MODE_PMC)){
-			exeFile = project.getFolder(MSetting.FOLDER_PMC).getFile(RUNFILENAME + MSetting.FILE_RUNNABLE_SUFFIX);
-		}else {
-			exeFile = project.getFolder(MSetting.FOLDER_BIN).getFile(RUNFILENAME + MSetting.FILE_RUNNABLE_SUFFIX);
-		}
-		 
-		if(!exeFile.exists()){
-			MConsole.print("ERROR: " + exeFile.getName() + ": No such file.",true);
-			return;
-		}
 		
-		String ARGS = config.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_ARGS, "").trim();
+		String ARGS = "";
+		if(LaunchConfig.LAUNCH_CONFIG_MODE_CONVERT.equals(MODE)){
+			ARGS = config.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_ARGS, "").trim();
+		}else{
+			ARGS = Property.get(project, PType.CMDLINEARGS);
+		}
 		
 		StringBuilder cmdBuilder = new StringBuilder();
-		cmdBuilder.append(exeFile.getRawLocation().toString());
+		cmdBuilder.append(RUNFILENAME);
 		cmdBuilder.append(DELIMITER);
 		cmdBuilder.append(ARGS);
 		String cmd = cmdBuilder.toString();
-		//System.out.println(cmd);
 		
 		// add process type to process attributes
 		Map<String, String> processAttributes = new HashMap<String, String>();
@@ -80,6 +71,5 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 		launch.setAttribute(IProcess.ATTR_CMDLINE , cmd);
 		Process p = DebugPlugin.exec(cmd.split(DELIMITER), wd);
 		DebugPlugin.newProcess(launch, p, NAME, processAttributes);
-		
 	}
 }

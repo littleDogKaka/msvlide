@@ -1,10 +1,9 @@
 package cn.edu.xidian.ictt.msvlide.action.convert;
 
-import java.io.File;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -12,7 +11,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import cn.edu.xidian.ictt.msvlide.console.DisplayOutput;
+import cn.edu.xidian.ictt.msvlide.launch.config.LaunchConfig;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
@@ -41,15 +40,22 @@ public class VHDL2MSVLAction implements IWorkbenchWindowActionDelegate{
 			return;
 		}
 		
-		String input = file.getRawLocation().toString().replace("/", "\\");
-		File wd = file.getProject().getFolder("src").getRawLocation().toFile();
-		String[] args = {MSetting.CONVERT_VHDL_TO_MSVL, input, wd.getAbsolutePath() + "\\" + file.getName() + MSetting.FILE_MAIN_SUFFIX};
+		String args = file.getRawLocation().toOSString() +" "+ file.getProject().getFolder(MSetting.FOLDER_SRC).getRawLocation().toOSString() + "\\" + file.getName() + MSetting.FILE_MAIN_SUFFIX;
 		try {
-			Process p = Runtime.getRuntime().exec(args, null, wd);
-			new Thread(new DisplayOutput(p.getInputStream(), "VHDL2MSVL")).start();
-			new Thread(new DisplayOutput(p.getErrorStream(), "VHDL2MSVL")).start();
-			p.waitFor();
-			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+			
+			ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_CONVERT, file.getProject());
+			ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
+			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_MODE, LaunchConfig.LAUNCH_CONFIG_MODE_CONVERT);
+			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, file.getProject().getName());
+			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_RUN_FILENAME, MSetting.CONVERT_VHDL_TO_MSVL);
+			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_WD, file.getProject().getFolder(MSetting.FOLDER_SRC).getRawLocation().toOSString());
+			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_ARGS, args);
+			config = wc.doSave();
+			try {
+				config.launch(LaunchConfig.LAUNCH_CONFIG_MODE_CONVERT, null, true);
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

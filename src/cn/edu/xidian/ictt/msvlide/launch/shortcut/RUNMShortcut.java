@@ -10,6 +10,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 
 import cn.edu.xidian.ictt.msvlide.Activator;
@@ -47,11 +48,16 @@ public class RUNMShortcut extends LaunchShortcut{
 			map.put(MSetting.BUILD_MAP_KEY_MODE, MSetting.BUILD_MODE_RUN_M);
 			dialog.run(true, true, new Build(project,MSVLBuilder.BUILDER_ID,map));
 			// run
-			ILaunchConfiguration config = LaunchConfig.find(mode, project, project.getName());
-			config.launch(mode, null, false);
-			
-			Thread.sleep(500);
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+			
+			String name = project.getFolder(MSetting.FOLDER_BIN).getFile(project.getName() + MSetting.FILE_RUNNABLE_SUFFIX).getRawLocation().toOSString();
+			ILaunchConfiguration config = LaunchConfig.find(mode, project);
+			ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
+			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_MODE, LaunchConfig.LAUNCH_CONFIG_MODE_RUN);
+			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, project.getName());
+			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_RUN_FILENAME, name);
+			config = wc.doSave();
+			config.launch(mode, null, false);
 		} catch (CoreException | InvocationTargetException | InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -74,8 +74,9 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 	}
 
 	protected void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
+		ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 		delta.accept(new MSVLDeltaVisitor(monitor));
-		genExe(monitor);
+		//genExe(monitor);
 	}
 	
 	private int compile(IFile file, String mode, IProgressMonitor monitor){
@@ -262,13 +263,14 @@ public class MSVLBuilder extends IncrementalProjectBuilder {
 					
 					if(parentname.equals(MSetting.FOLDER_SRC)){
 						if(filename.endsWith(MSetting.FILE_MAIN_SUFFIX)){
-							compile(file,MSetting.BUILD_MODE_RUN_S,monitor);
+							//compile(file,MSetting.BUILD_MODE_RUN_S,monitor);
 						}else if(filename.endsWith(MSetting.FILE_FUNC_SUFFIX)) {
-							compile(file,MSetting.BUILD_MODE_RUN_S,monitor);
+							//compile(file,MSetting.BUILD_MODE_RUN_S,monitor);
 						}else if(filename.endsWith(MSetting.FILE_HEADER_SUFFIX)){
 							
 						}
 					}
+					ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 				}
 				break;
 			case IResourceDelta.REMOVED:

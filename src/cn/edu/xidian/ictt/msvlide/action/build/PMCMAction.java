@@ -9,6 +9,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 
@@ -37,21 +38,25 @@ public class PMCMAction extends MCAction{
 			dialog.run(true, true, new MCBuild(file.getProject(), MSetting.BUILD_MODE_PMC_M, filename));
 			
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-			Thread.sleep(100);
 			
 			IProject project = file.getProject();
 			IFolder out = project.getFolder(MSetting.FOLDER_PMC);
 			IFile runFile = out.getFile(filename.substring(0, filename.length() -2));
 			if(runFile.isAccessible()){
-				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_PMC, project,filename.substring(0, filename.length() -2));
+				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_PMC, project);
+				ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
+				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_MODE, LaunchConfig.LAUNCH_CONFIG_MODE_PMC);
+				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, project.getName());
+				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_RUN_FILENAME, runFile.getRawLocation().toOSString());
+				config = wc.doSave();
 				try {
 					config.launch(LaunchConfig.LAUNCH_CONFIG_MODE_PMC, null, true);
 				} catch (CoreException e) {
 					e.printStackTrace();
 				}
 			}
-			Thread.sleep(100);
-			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+			
+			//ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (InvocationTargetException | InterruptedException | CoreException  e) {//| InterruptedException
 			e.printStackTrace();
 		}

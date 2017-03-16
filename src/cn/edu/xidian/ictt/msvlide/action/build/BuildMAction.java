@@ -7,6 +7,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -36,7 +37,12 @@ public class BuildMAction extends BuildAction{
 			
 			IFile runFile = project.getFolder(MSetting.FOLDER_BIN).getFile(project.getName() + MSetting.FILE_RUNNABLE_SUFFIX);
 			if(runFile.isAccessible()){
-				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_RUN, project, project.getName());
+				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_RUN, project);
+				ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
+				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_MODE, LaunchConfig.LAUNCH_CONFIG_MODE_RUN);
+				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, project.getName());
+				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_RUN_FILENAME, runFile.getRawLocation().toOSString());
+				config = wc.doSave();
 				try {
 					config.launch(LaunchConfig.LAUNCH_CONFIG_MODE_RUN, null, true);
 				} catch (CoreException e) {

@@ -1,12 +1,12 @@
 package cn.edu.xidian.ictt.msvlide.action.convert;
 
-import java.io.File;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import cn.edu.xidian.ictt.msvlide.console.DisplayOutput;
+import cn.edu.xidian.ictt.msvlide.launch.config.LaunchConfig;
 import cn.edu.xidian.ictt.msvlide.project.util.MProject;
 import cn.edu.xidian.ictt.msvlide.project.util.MSetting;
 
@@ -69,19 +69,22 @@ public class C2MSVLAction implements IWorkbenchWindowActionDelegate{
 				return;
 			}
 			
-			String input = file.getRawLocation().toString().replace("/", "\\");
-			//System.out.println(input);
-			String[] args = {MSetting.CONVERT_C_TO_MSVL, input, file.getName() + MSetting.FILE_MAIN_SUFFIX};
-			//System.out.println(args[1]);
-			
-			File wd = project.getFolder(MSetting.FOLDER_SRC).getRawLocation().toFile();
-			
+			String args = file.getRawLocation().toOSString() + " " + file.getProject().getFolder(MSetting.FOLDER_SRC).getRawLocation().toOSString() + "\\" + filename + MSetting.FILE_MAIN_SUFFIX;
+
 			try {
-				Process p = Runtime.getRuntime().exec(args, null, wd);
-				new Thread(new DisplayOutput(p.getInputStream(), "C2MSVL")).start();
-				new Thread(new DisplayOutput(p.getErrorStream(), "C2MSVL")).start();
-				p.waitFor();
-				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_CONVERT, file.getProject());
+				ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
+				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_MODE, LaunchConfig.LAUNCH_CONFIG_MODE_CONVERT);
+				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, file.getProject().getName());
+				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_RUN_FILENAME, MSetting.CONVERT_C_TO_MSVL);
+				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_WD, file.getProject().getFolder(MSetting.FOLDER_SRC).getRawLocation().toOSString());
+				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_ARGS, args);
+				config = wc.doSave();
+				try {
+					config.launch(LaunchConfig.LAUNCH_CONFIG_MODE_CONVERT, null, true);
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

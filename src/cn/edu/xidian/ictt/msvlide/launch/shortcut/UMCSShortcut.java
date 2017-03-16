@@ -10,6 +10,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 
 import cn.edu.xidian.ictt.msvlide.Activator;
@@ -39,12 +40,16 @@ public class UMCSShortcut extends LaunchShortcut {
 			ProgressMonitorDialog dialog = new ProgressMonitorDialog(Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
 			dialog.run(true, true, new Build(project,UMCBuilder.BUILDER_ID,map));
 			
-			String name = file.getName().substring(0, file.getName().length() - 2);
-			ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, project, name);
-			config.launch(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, null, false);
-			
-			Thread.sleep(500);
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+			
+			String name = project.getFolder(MSetting.FOLDER_UMC).getFile(file.getName().substring(0, file.getName().length() - 2) + MSetting.FILE_RUNNABLE_SUFFIX).getRawLocation().toOSString();
+			ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, project);
+			ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
+			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_MODE, LaunchConfig.LAUNCH_CONFIG_MODE_UMC);
+			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, project.getName());
+			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_RUN_FILENAME, name);
+			config = wc.doSave();
+			config.launch(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, null, false);
 		} catch (CoreException | InvocationTargetException | InterruptedException e) {
 			e.printStackTrace();
 		}

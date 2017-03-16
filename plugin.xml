@@ -322,6 +322,73 @@
 	<!-- launch start -->
 	<extension
 		point="org.eclipse.debug.ui.launchShortcuts">
+		<!-- Convert Shortcut -->
+		<shortcut
+			class= "cn.edu.xidian.ictt.msvlide.launch.shortcut.CShortcut"
+			icon= "icons/console_16.ico"
+			id= "cn.edu.xidian.ictt.msvlide.launch.launchshortcut.c2msvl"
+			label= "%MSVL.Convert.LaunchShortcut.Name.c"
+			modes= "run" >
+			<contextualLaunch>
+				<enablement>
+					<with variable= "selection">
+						<count
+							value= "1">
+						</count>
+						<iterate>
+							<adapt type="org.eclipse.core.resources.IFile">
+								<test property="org.eclipse.debug.ui.matchesPattern" value="[\s|\S]+.c$"/>
+							</adapt>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+		</shortcut>
+		
+		<shortcut
+			class= "cn.edu.xidian.ictt.msvlide.launch.shortcut.VHDLShortcut"
+			icon= "icons/console_16.ico"
+			id= "cn.edu.xidian.ictt.msvlide.launch.launchshortcut.vhdl2msvl"
+			label= "%MSVL.Convert.LaunchShortcut.Name.VHDL"
+			modes= "run" >
+			<contextualLaunch>
+				<enablement>
+					<with variable= "selection">
+						<count
+							value= "1">
+						</count>
+						<iterate>
+							<adapt type="org.eclipse.core.resources.IFile">
+								<test property="org.eclipse.debug.ui.matchesPattern" value="[\s|\S]+.vhd$"/>
+							</adapt>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+		</shortcut>
+		
+		<shortcut
+			class= "cn.edu.xidian.ictt.msvlide.launch.shortcut.VerilogShortcut"
+			icon= "icons/console_16.ico"
+			id= "cn.edu.xidian.ictt.msvlide.launch.launchshortcut.verilog2msvl"
+			label= "%MSVL.Convert.LaunchShortcut.Name.Verilog"
+			modes= "run" >
+			<contextualLaunch>
+				<enablement>
+					<with variable= "selection">
+						<count
+							value= "1">
+						</count>
+						<iterate>
+							<adapt type="org.eclipse.core.resources.IFile">
+								<test property="org.eclipse.debug.ui.matchesPattern" value="[\s|\S]+.v$"/>
+							</adapt>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+		</shortcut>
+		
 		<!-- RUN Shortcut -->
 		<shortcut
 			class= "cn.edu.xidian.ictt.msvlide.launch.shortcut.RUNSShortcut"
@@ -505,7 +572,7 @@
 		<launchConfigurationType
 			id= "cn.edu.xidian.ictt.msvlide.launch.ConfigurationType"
 			delegate= "cn.edu.xidian.ictt.msvlide.launch.config.LaunchDelegate"
-			modes= "run,pmc,umc"
+			modes= "run,pmc,umc,convert"
 			name= "%MSVL.LaunchConfig.Name"
 			delegateName="%MSVL.LaunchConfig.Delegate.Name"
 			delegateDescription="%MSVL.LaunchConfig.Delegate.Description">
