@@ -9,10 +9,16 @@ import org.eclipse.ui.wizards.newresource.BasicNewFolderResourceWizard;
 public class Factory implements IPerspectiveFactory{
 
 	private static final String MSVL_PERSPECTIVE_ID = "cn.edu.xidian.ictt.msvlide.perspective";
+	
 	private static final String MSVL_BUILD_ACTIONSET_ID = "cn.edu.xidian.ictt.msvlide.ActionSet.Build";
 	private static final String MSVL_CONVERT_ACTIONSET_ID = "cn.edu.xidian.ictt.msvlide.ActionSet.Convert";
 	private static final String MSVL_CHECK_ACTIONSET_ID = "cn.edu.xidian.ictt.msvlide.ActionSet.Checker";
 	private static final String NEW_PROJECT_WIZARD_ID = "cn.edu.xidian.ictt.msvlide.newwizards.project";
+	private static final String NEW_EMPTY_PROJECT_WIZARD_ID = "cn.edu.xidian.ictt.msvlide.newwizards.emptyproject";
+	private static final String NEW_C_PROJECT_WIZARD_ID = "cn.edu.xidian.ictt.msvlide.newwizards.c2msvlproject";
+	private static final String NEW_VHDL_PROJECT_WIZARD_ID = "cn.edu.xidian.ictt.msvlide.newwizards.vhdl2msvlproject";
+	private static final String NEW_VERILOG_PROJECT_WIZARD_ID = "cn.edu.xidian.ictt.msvlide.newwizards.verilog2msvlproject";
+	
 	private static final String NEW_MAINFILE_WIZARD_ID = "cn.edu.xidian.ictt.msvlide.newwizards.CreateMainFile";
 	private static final String NEW_FUNCFILE_WIZARD_ID = "cn.edu.xidian.ictt.msvlide.newwizards.CreateFuncFile";
 	private static final String NEW_HEADERFILE_WIZARD_ID = "cn.edu.xidian.ictt.msvlide.newwizards.CreateHeaderFile";
@@ -36,7 +42,12 @@ public class Factory implements IPerspectiveFactory{
 		
 		layout.addNewWizardShortcut(BasicNewFolderResourceWizard.WIZARD_ID);
 		layout.addNewWizardShortcut(BasicNewFileResourceWizard.WIZARD_ID);
+		
 		layout.addNewWizardShortcut(NEW_PROJECT_WIZARD_ID);
+		layout.addNewWizardShortcut(NEW_EMPTY_PROJECT_WIZARD_ID);
+		layout.addNewWizardShortcut(NEW_C_PROJECT_WIZARD_ID);
+		layout.addNewWizardShortcut(NEW_VHDL_PROJECT_WIZARD_ID);
+		layout.addNewWizardShortcut(NEW_VERILOG_PROJECT_WIZARD_ID);
 		layout.addNewWizardShortcut(NEW_MAINFILE_WIZARD_ID);
 		layout.addNewWizardShortcut(NEW_FUNCFILE_WIZARD_ID);
 		layout.addNewWizardShortcut(NEW_HEADERFILE_WIZARD_ID);

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -71,5 +72,22 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 		launch.setAttribute(IProcess.ATTR_CMDLINE , cmd);
 		Process p = DebugPlugin.exec(cmd.split(DELIMITER), wd);
 		DebugPlugin.newProcess(launch, p, NAME, processAttributes);
+		//
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					p.waitFor();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				try {
+					ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 }

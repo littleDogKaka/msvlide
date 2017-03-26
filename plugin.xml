@@ -89,6 +89,50 @@
 			<description>%MSVL.Project.New.Description</description>
 		</wizard>
 		<wizard
+            name="%MSVL.Project.Empty"
+            icon="icons/m.png"
+            category="cn.edu.xidian.ictt.msvlide.newwizards.category"
+            class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateEmptyProject"
+            preferredPerspectives="cn.edu.xidian.ictt.msvlide.perspective"
+            project="true"
+            finalPerspective="cn.edu.xidian.ictt.msvlide.perspective"
+            id="cn.edu.xidian.ictt.msvlide.newwizards.emptyproject">
+			<description>%MSVL.Project.New.Description.Empty</description>
+		</wizard>
+		<wizard
+            name="%MSVL.Project.C"
+            icon="icons/m.png"
+            category="cn.edu.xidian.ictt.msvlide.newwizards.category"
+            class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateCProject"
+            preferredPerspectives="cn.edu.xidian.ictt.msvlide.perspective"
+            project="true"
+            finalPerspective="cn.edu.xidian.ictt.msvlide.perspective"
+            id="cn.edu.xidian.ictt.msvlide.newwizards.c2msvlproject">
+			<description>%MSVL.Project.New.Description.C</description>
+		</wizard>
+		<wizard
+            name="%MSVL.Project.VHDL"
+            icon="icons/m.png"
+            category="cn.edu.xidian.ictt.msvlide.newwizards.category"
+            class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateVHDLProject"
+            preferredPerspectives="cn.edu.xidian.ictt.msvlide.perspective"
+            project="true"
+            finalPerspective="cn.edu.xidian.ictt.msvlide.perspective"
+            id="cn.edu.xidian.ictt.msvlide.newwizards.vhdl2msvlproject">
+			<description>%MSVL.Project.New.Description.VHDL</description>
+		</wizard>
+		<wizard
+            name="%MSVL.Project.Verilog"
+            icon="icons/m.png"
+            category="cn.edu.xidian.ictt.msvlide.newwizards.category"
+            class="cn.edu.xidian.ictt.msvlide.ui.wizard.CreateVerilogProject"
+            preferredPerspectives="cn.edu.xidian.ictt.msvlide.perspective"
+            project="true"
+            finalPerspective="cn.edu.xidian.ictt.msvlide.perspective"
+            id="cn.edu.xidian.ictt.msvlide.newwizards.verilog2msvlproject">
+			<description>%MSVL.Project.New.Description.Verilog</description>
+		</wizard>
+		<wizard
 			name="%MSVL.File.New.Main"
             icon="icons/file_m_16.png"
             category="cn.edu.xidian.ictt.msvlide.newwizards.category"
