@@ -41,6 +41,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate{
 		
 		File wd = null;
 		String WDIR = config.getAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_WD, "");
+		//System.out.println(WDIR);
 		if(WDIR.isEmpty()){
 			String path = project.getLocation().toOSString();
 			wd = new File(path);
