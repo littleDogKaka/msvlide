@@ -1,6 +1,5 @@
 package cn.edu.xidian.ictt.msvlide.launch.config;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -34,12 +33,12 @@ public class LaunchConfig {
 		Manager = DebugPlugin.getDefault().getLaunchManager();
 	}
 	
-	public static ILaunchConfiguration find(String mode, IProject project) {
+	public static ILaunchConfiguration find(String mode) {
         ILaunchConfiguration configuration = null;
         try {
             ILaunchConfiguration[] configs = Manager.getLaunchConfigurations();
             for (ILaunchConfiguration config: configs) {
-                if (config.getName().equals(name(mode,project))) {
+                if (config.getName().equals(name(mode))) {
                 	configuration = config;
                 	break;
                 }
@@ -48,17 +47,17 @@ public class LaunchConfig {
             e.printStackTrace();
         }
         if (configuration == null) {
-            configuration = create(mode,project);
+            configuration = create(mode);
         }
         return configuration;
     }
 
-    private static ILaunchConfiguration create(String mode, IProject project) {
+    private static ILaunchConfiguration create(String mode) {
         ILaunchConfiguration config = null;
         ILaunchConfigurationType type = Manager.getLaunchConfigurationType(LaunchConfig.LAUNCH_CONFIG_TYPE_ID);
         try {
             if (type != null) {
-                ILaunchConfigurationWorkingCopy wc = type.newInstance(null, Manager.generateLaunchConfigurationName(name(mode,project)));
+                ILaunchConfigurationWorkingCopy wc = type.newInstance(null, Manager.generateLaunchConfigurationName(name(mode)));
                 config = wc.doSave();
             }
         } catch (CoreException e) {
@@ -67,15 +66,14 @@ public class LaunchConfig {
         return config;
     }
 
-    private static String name(String mode, IProject project){
-    	String rtn = project.getName() + "-";
+    private static String name(String mode){
     	if(mode.equals(LAUNCH_CONFIG_MODE_UMC)){
-    		return rtn + LAUNCH_CONFIG_NAME_VERIFICATION_UMC;
+    		return LAUNCH_CONFIG_NAME_VERIFICATION_UMC;
     	}else if(mode.equals(LAUNCH_CONFIG_MODE_PMC)){
-    		return rtn + LAUNCH_CONFIG_NAME_VERIFICATION_PMC;
+    		return LAUNCH_CONFIG_NAME_VERIFICATION_PMC;
     	}else if(mode.equals(LAUNCH_CONFIG_MODE_RUN)){
-    		return rtn + LAUNCH_CONFIG_NAME_SIMULATION;
+    		return LAUNCH_CONFIG_NAME_SIMULATION;
     	}
-    	return rtn + LAUNCH_CONFIG_NAME_CONVERT;
+    	return LAUNCH_CONFIG_NAME_CONVERT;
     }
 }

@@ -51,7 +51,7 @@ public class RUNMShortcut extends LaunchShortcut{
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 			
 			String name = project.getFolder(MSetting.FOLDER_BIN).getFile(project.getName() + MSetting.FILE_RUNNABLE_SUFFIX).getRawLocation().toOSString();
-			ILaunchConfiguration config = LaunchConfig.find(mode, project);
+			ILaunchConfiguration config = LaunchConfig.find(mode);
 			ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
 			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_MODE, LaunchConfig.LAUNCH_CONFIG_MODE_RUN);
 			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, project.getName());

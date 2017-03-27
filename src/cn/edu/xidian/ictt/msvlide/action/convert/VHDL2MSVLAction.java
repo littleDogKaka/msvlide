@@ -42,7 +42,7 @@ public class VHDL2MSVLAction implements IWorkbenchWindowActionDelegate{
 		
 		String args = file.getRawLocation().toOSString() +" "+ file.getProject().getFolder(MSetting.FOLDER_SRC).getRawLocation().toOSString() + "\\" + file.getName() + MSetting.FILE_MAIN_SUFFIX;
 		try {
-			ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_CONVERT, file.getProject());
+			ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_CONVERT);
 			ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
 			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_MODE, LaunchConfig.LAUNCH_CONFIG_MODE_CONVERT);
 			wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, file.getProject().getName());

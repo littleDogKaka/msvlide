@@ -43,7 +43,7 @@ public class PMCSAction extends MCAction{
 			IFolder out = project.getFolder(MSetting.FOLDER_PMC);
 			IFile runFile = out.getFile(filename.substring(0, filename.length() -2));
 			if(runFile.isAccessible()){
-				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_PMC, project);
+				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_PMC);
 				ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
 				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_MODE, LaunchConfig.LAUNCH_CONFIG_MODE_PMC);
 				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, project.getName());

@@ -44,7 +44,7 @@ public class UMCMAction extends MCAction{
 			IFolder out = project.getFolder(MSetting.FOLDER_UMC);
 			IFile runFile = out.getFile(filename.substring(0, filename.length() -2));
 			if(runFile.isAccessible()){
-				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_UMC, project);
+				ILaunchConfiguration config = LaunchConfig.find(LaunchConfig.LAUNCH_CONFIG_MODE_UMC);
 				ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
 				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_MODE, LaunchConfig.LAUNCH_CONFIG_MODE_UMC);
 				wc.setAttribute(LaunchConfig.LAUNCH_CONFIG_KEY_PROJECT_NAME, project.getName());
